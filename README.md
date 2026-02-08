@@ -1,65 +1,62 @@
 # dustviz
 
-`dustviz` is the **IR and constraint visualization tool** for the Dust Programming Language (DPL) toolchain.
+`dustviz` is a visualization and inspection tool for **intermediate representations (IR)** and **constraint graphs** produced by external systems.
 
-It consumes compiler- and runtime-produced artifacts and renders **explicit graph representations** of:
+It is designed to make structural relationships explicit and inspectable by rendering them as graphs or machine-readable models.
 
-- Intermediate Representation (IR)
-- Semantic constraints
-- Phase dependencies
-- Admissibility structure
-
-`dustviz` is an *analysis and inspection tool*.  
-It does **not** compile, execute, or validate programs.
+`dustviz` does **not** define, validate, compile, or execute programs.
 
 ---
 
-## Scope
+## Purpose
 
-`dustviz` is responsible for **making internal structure visible**.
+The purpose of `dustviz` is **structural visibility**.
 
-Specifically, it:
+It exists to:
+- Load externally produced artifacts (such as IR or constraint data)
+- Construct explicit graph representations from those artifacts
+- Render those graphs in deterministic, inspectable formats
 
-- Loads IR and constraint data produced by the Dust compiler or runtime
-- Builds explicit graph models from that data
-- Emits deterministic visual or machine-readable representations
-
-It does **not**:
-
-- Define semantics
-- Enforce admissibility
-- Perform compilation
-- Perform execution
-
-All semantic meaning originates in the **canonical DPL specification**.
+The tool is intended for:
+- Debugging
+- Analysis
+- Explanation
+- Verification by inspection
 
 ---
 
-## Canonical Authority
+## Project Scope
 
-The canonical definition of DPL semantics, constraints, and phases lives in:
+This project is strictly limited to **visualization**.
 
-```
-spec/
-```
+### `dustviz` DOES:
+- Consume external IR and constraint artifacts
+- Build in-memory graph models
+- Emit visual and machine-readable representations
 
-`dustviz` **must not reinterpret, redefine, or extend** the spec.
+### `dustviz` DOES NOT:
+- Define language syntax or semantics
+- Perform semantic validation
+- Enforce correctness or admissibility
+- Compile or execute code
+- Own or embed any language specification
 
-If a visualization appears to contradict the spec, the visualization is wrong.
+All inputs are treated as **opaque external data** whose meaning is defined elsewhere.
 
 ---
 
 ## Inputs
 
-`dustviz` operates on **explicit artifacts**, not source code.
+`dustviz` operates on **explicit input artifacts** supplied by the user.
 
-Initial supported inputs are:
+Typical inputs include:
+- Intermediate representation (IR) dumps
+- Constraint sets
+- Dependency or phase graphs
+- Execution traces
 
-- Compiler IR dumps
-- Constraint sets emitted by semantic analysis
-- Runtime execution traces (where applicable)
-
-The exact input formats are intentionally isolated behind a loader layer so they can evolve without destabilizing visualization logic.
+Input formats are **not defined by this project**.
+They are treated as external contracts and are isolated behind a loader layer so they can evolve independently.
 
 ---
 
@@ -67,61 +64,72 @@ The exact input formats are intentionally isolated behind a loader layer so they
 
 `dustviz` produces **pure representations** of structure.
 
-Supported output formats:
-
+Supported output formats include:
 - **DOT** (Graphviz)
-- **SVG** (via DOT or native rendering)
+- **SVG**
 - **JSON** (machine-readable graph model)
 
-All outputs are deterministic given identical inputs.
+All outputs are:
+- Deterministic
+- Side-effect free
+- Derived solely from the provided inputs
 
 ---
 
 ## Architecture
 
-High-level internal structure:
+High-level processing pipeline:
 
 ```
-cli → input → model → graph → render
+CLI → Input Loader → Internal Model → Graph Builder → Renderer
 ```
 
-Where:
-
-- `cli` parses user intent
-- `input` loads artifacts
-- `model` represents IR and constraints
-- `graph` constructs structural relationships
-- `render` emits outputs
-
-Each stage is isolated and testable.
+Each stage is isolated to ensure:
+- Clear responsibility boundaries
+- Replaceable input formats
+- Multiple rendering backends
+- Testability
 
 ---
 
-## Command-Line Interface
+## Command-Line Usage
 
 Example (illustrative):
 
 ```
 dustviz render \
-  --input target/dust/ir.json \
-  --constraints target/dust/constraints.json \
+  --input ir.json \
+  --constraints constraints.json \
   --format dot \
   --output graph.dot
 ```
 
-The CLI is intentionally explicit; there is no “magic discovery”.
+The CLI is intentionally explicit.
+There is no implicit discovery or hidden behavior.
 
 ---
 
 ## Determinism
 
-`dustviz` is designed to be:
+Given the same inputs and configuration, `dustviz` must produce the same outputs byte-for-byte.
 
-- Deterministic
-- Side-effect free
-- Read-only with respect to inputs
+This property is required for:
+- Reliable debugging
+- Regression testing
+- Tooling integration
 
-Given the same inputs, it must produce the same outputs byte-for-byte.
+---
+
+## Development Context
+
+This project was developed using external artifacts and documentation provided alongside it for reference.
+
+Those materials:
+- Are not included in this project
+- Are not owned by this project
+- Are not documented here
+
+They are treated strictly as **external references**.
 
 ---
 
@@ -130,21 +138,11 @@ Given the same inputs, it must produce the same outputs byte-for-byte.
 `dustviz` is under active development.
 
 Expect:
-- Format changes
-- Expanded graph semantics
+- New input adapters
+- Expanded graph annotations
 - Additional renderers
 
-Do **not** assume stability outside of what is explicitly documented here.
-
----
-
-## Relationship to Other Tools
-
-- `dustc` produces data
-- `dustrun` executes admitted programs
-- `dustviz` explains structure
-
-Each tool has a single responsibility.
+No stability guarantees are implied unless explicitly documented.
 
 ---
 
