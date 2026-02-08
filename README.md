@@ -146,6 +146,16 @@ No stability guarantees are implied unless explicitly documented.
 
 ---
 
+## Relationship to Other Tools
+
+- `dustc` produces data
+- `dustrun` executes admitted programs
+- `dustviz` explains structure
+
+Each tool has a single responsibility.
+
+---
+
 ## License
 
 See the repository license for terms.
