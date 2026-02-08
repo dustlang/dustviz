@@ -1,0 +1,32 @@
+{
+  "forges": [
+    {
+      "name": "core",
+      "shapes": [],
+      "procs": [
+        {
+          "regime": "K",
+          "name": "main",
+          "params": [],
+          "uses": [],
+          "ret": "Int",
+          "qualifiers": [],
+          "body": [
+            {
+              "Effect": {
+                "kind": "emit",
+                "payload": "\"Hello, Dust!\""
+              }
+            },
+            {
+              "Return": {
+                "expr": "0"
+              }
+            }
+          ]
+        }
+      ],
+      "binds": []
+    }
+  ]
+}
