@@ -1,184 +1,153 @@
-# Dust
+# dustviz
 
-**Dust** is a phase-aware programming system centered around the **Dust Programming Language (DPL)**, its compiler toolchain, runtime, and associated analysis and visualization tools.
+`dustviz` is the **IR and constraint visualization tool** for the Dust Programming Language (DPL) toolchain.
 
-Dust is designed for **constraint-driven computation**, explicit **phase structure**, and formal reasoning about **program admissibility**, rather than treating execution as the sole arbiter of correctness.
+It consumes compiler- and runtime-produced artifacts and renders **explicit graph representations** of:
 
-This repository contains the full Dust toolchain, including the canonical DPL specification, compiler, runtime, and visualization infrastructure.
+- Intermediate Representation (IR)
+- Semantic constraints
+- Phase dependencies
+- Admissibility structure
 
----
-
-## Repository Structure
-
-```
-dust-main/
-├── crates/
-│   ├── dust_frontend/     # Lexer, parser, AST, surface syntax
-│   ├── dust_semantics/    # Canonical semantic analysis & constraints
-│   ├── dust_codegen/     # Lowering & code generation
-│   ├── dust_driver/      # Compiler orchestration (dustc)
-│   ├── dustrun/          # Runtime / execution harness
-│   └── dustviz/          # IR + constraint graph visualization
-│
-├── spec/                 # ✅ CANONICAL DPL SPECIFICATION
-│
-├── examples/             # Example DPL programs
-├── tests/                # Integration & conformance tests
-├── Cargo.toml            # Workspace root
-└── README.md             # (this file)
-```
+`dustviz` is an *analysis and inspection tool*.  
+It does **not** compile, execute, or validate programs.
 
 ---
 
-## Canonical vs Non-Canonical Material
+## Scope
 
-### ✅ Canonical
+`dustviz` is responsible for **making internal structure visible**.
 
-The **only canonical definition of DPL** lives in:
+Specifically, it:
+
+- Loads IR and constraint data produced by the Dust compiler or runtime
+- Builds explicit graph models from that data
+- Emits deterministic visual or machine-readable representations
+
+It does **not**:
+
+- Define semantics
+- Enforce admissibility
+- Perform compilation
+- Perform execution
+
+All semantic meaning originates in the **canonical DPL specification**.
+
+---
+
+## Canonical Authority
+
+The canonical definition of DPL semantics, constraints, and phases lives in:
 
 ```
 spec/
 ```
 
-Everything under `spec/` is **normative**:
+`dustviz` **must not reinterpret, redefine, or extend** the spec.
 
-- Language syntax
-- Semantic rules
-- Constraint definitions
-- Phase behavior
-- Admissibility rules
-- Formal guarantees
-
-If there is *any discrepancy* between code, comments, examples, documentation, or tooling **and the spec**, **the spec wins**.
+If a visualization appears to contradict the spec, the visualization is wrong.
 
 ---
 
-### ⚠️ Non-Canonical (May Be Correct)
+## Inputs
 
-Everything outside `spec/`:
+`dustviz` operates on **explicit artifacts**, not source code.
 
-- Rust crates
-- Comments
-- Examples
-- Tests
-- Tooling behavior
-- Documentation (including this file)
+Initial supported inputs are:
 
-**may be correct**, but is **not authoritative**.
+- Compiler IR dumps
+- Constraint sets emitted by semantic analysis
+- Runtime execution traces (where applicable)
 
-Non-canonical material is expected to:
-- Lag the spec
-- Explore design space
-- Contain experimental or provisional behavior
-- Be refined or replaced as the spec evolves
+The exact input formats are intentionally isolated behind a loader layer so they can evolve without destabilizing visualization logic.
 
 ---
 
-## Dust Programming Language (DPL)
+## Outputs
 
-DPL is not a conventional imperative or functional language.
+`dustviz` produces **pure representations** of structure.
 
-Core characteristics:
+Supported output formats:
 
-- **Phase-aware semantics**
-- **Constraint-first reasoning**
-- **Admissibility over execution**
-- **Explicit semantic structure**
-- **Non-accidental complexity elimination**
+- **DOT** (Graphviz)
+- **SVG** (via DOT or native rendering)
+- **JSON** (machine-readable graph model)
 
-A DPL program is not merely *run* — it is **validated**, **constrained**, and only then **admitted** for execution.
+All outputs are deterministic given identical inputs.
 
 ---
 
-## Toolchain Overview
+## Architecture
 
-### `dustc` (Compiler)
+High-level internal structure:
 
-The Dust compiler performs:
+```
+cli → input → model → graph → render
+```
 
-1. Parsing and AST construction
-2. Canonical semantic analysis
-3. Constraint generation
-4. Phase validation
-5. IR lowering
-6. Code generation
+Where:
 
-The compiler’s behavior is governed by the canonical rules in `spec/`.
+- `cli` parses user intent
+- `input` loads artifacts
+- `model` represents IR and constraints
+- `graph` constructs structural relationships
+- `render` emits outputs
 
----
-
-### `dustrun` (Runtime)
-
-`dustrun` executes **admitted Dust programs**.
-
-It is intentionally separated from compilation to preserve:
-- Semantic clarity
-- Determinism
-- Inspectability
-- Runtime minimalism
-
-Execution does **not** redefine correctness.
+Each stage is isolated and testable.
 
 ---
 
-### `dustviz` (Visualization)
+## Command-Line Interface
 
-`dustviz` is a first-class analysis tool that visualizes:
+Example (illustrative):
 
-- Intermediate Representation (IR)
-- Constraint graphs
-- Phase dependencies
-- Admissibility structure
+```
+dustviz render \
+  --input target/dust/ir.json \
+  --constraints target/dust/constraints.json \
+  --format dot \
+  --output graph.dot
+```
 
-Its purpose is **explanation, inspection, and verification**, not compilation or execution.
-
-Outputs may include:
-- Graphviz DOT
-- SVG
-- JSON (machine-readable)
+The CLI is intentionally explicit; there is no “magic discovery”.
 
 ---
 
-## Design Philosophy
+## Determinism
 
-Dust is built around several core principles:
+`dustviz` is designed to be:
 
-- **Semantics before mechanics**
-- **Constraints before control flow**
-- **Structure before optimization**
-- **Clarity before convenience**
-- **Admissibility before execution**
+- Deterministic
+- Side-effect free
+- Read-only with respect to inputs
 
-Dust is intentionally opinionated.
+Given the same inputs, it must produce the same outputs byte-for-byte.
 
 ---
 
 ## Status
 
-- The DPL specification is **actively evolving**
-- The compiler and tools are **real, operational, and incomplete by design**
-- Backward compatibility is **not guaranteed** outside the spec
+`dustviz` is under active development.
 
-Expect rapid iteration.
+Expect:
+- Format changes
+- Expanded graph semantics
+- Additional renderers
+
+Do **not** assume stability outside of what is explicitly documented here.
+
+---
+
+## Relationship to Other Tools
+
+- `dustc` produces data
+- `dustrun` executes admitted programs
+- `dustviz` explains structure
+
+Each tool has a single responsibility.
 
 ---
 
 ## License
 
-See the repository license files for terms covering:
-- Code
-- Specification
-- Documentation
-
----
-
-## Contributing
-
-Contributions are welcome **only if they respect the canonical authority of the spec**.
-
-When in doubt:
-1. Check `spec/`
-2. Update `spec/`
-3. Then update code
-
-Never the reverse.
+See the repository license for terms.
