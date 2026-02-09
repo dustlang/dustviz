@@ -9,7 +9,7 @@ use dustviz::app::{run, AppConfig};
 use dustviz::cli::{Cli, Command, OutputFormat};
 use dustviz::graph::build_dir_graph;
 use dustviz::input::{load_dir_program, resolve_input_path};
-use dustviz::render::{render_dot, render_json};
+use dustviz::render::{render_dot, render_dot_annotated, render_json};
 use dustviz::util::diagnostics::Diagnostic;
 
 fn main() {
@@ -20,8 +20,9 @@ fn main() {
         Command::Render {
             input,
             format,
+            annotated,
             output,
-        } => cmd_render(input, format, output),
+        } => cmd_render(input, format, annotated, output),
     };
 
     if let Err(err) = result {
@@ -38,6 +39,7 @@ fn cmd_parse(input: PathBuf) -> Result<(), Diagnostic> {
 fn cmd_render(
     input: PathBuf,
     format: OutputFormat,
+    annotated: bool,
     output: Option<PathBuf>,
 ) -> Result<(), Diagnostic> {
     let input_path = resolve_input_path(&input)?;
@@ -46,12 +48,15 @@ fn cmd_render(
 
     match format {
         OutputFormat::Dot => {
-            let dot = render_dot(&graph);
+            let dot = if annotated {
+                render_dot_annotated(&graph)
+            } else {
+                render_dot(&graph)
+            };
             write_output(dot, output)?;
         }
         OutputFormat::Json => {
-            let json =
-                render_json(&graph).map_err(|e| Diagnostic::message(e.to_string()))?;
+            let json = render_json(&graph).map_err(|e| Diagnostic::message(e.to_string()))?;
             write_output(json, output)?;
         }
         OutputFormat::Svg => {
