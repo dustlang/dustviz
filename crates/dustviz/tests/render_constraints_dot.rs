@@ -1,18 +1,18 @@
 // crates/dustviz/tests/render_constraints_dot.rs
 //
-// Snapshot-style test for DOT rendering with constraint overlay.
+// Snapshot-style test for DOT rendering with constraint overlay + IR-reference linking.
 //
 // This test locks the DOT output for the combined graph:
 // - IR fixture: tests/fixtures/minimal/program.dir.json
 // - Constraints fixture: tests/fixtures/constraints/minimal/constraints.json
 //
 // Golden file location:
-// - tests/fixtures/constraints/minimal/combined.dot
+// - tests/fixtures/constraints/minimal/combined.linked.dot
 
 use std::fs;
 use std::path::PathBuf;
 
-use dustviz::graph::{build_dir_graph, overlay_constraints};
+use dustviz::graph::{build_dir_graph, link_constraint_ir_refs, overlay_constraints};
 use dustviz::input::{load_constraints, load_dir_program};
 use dustviz::render::render_dot;
 
@@ -39,16 +39,17 @@ fn golden_dot_path() -> PathBuf {
         .join("fixtures")
         .join("constraints")
         .join("minimal")
-        .join("combined.dot")
+        .join("combined.linked.dot")
 }
 
 #[test]
-fn dot_with_constraints_matches_golden() {
+fn dot_with_constraints_and_links_matches_golden() {
     let program = load_dir_program(&program_path()).expect("program fixture parses");
     let mut graph = build_dir_graph(&program);
 
     let constraints = load_constraints(&constraints_path()).expect("constraints fixture parses");
-    overlay_constraints(&mut graph, &constraints);
+    let map = overlay_constraints(&mut graph, &constraints);
+    link_constraint_ir_refs(&mut graph, &constraints, &map);
 
     let actual = render_dot(&graph);
     let expected = fs::read_to_string(&golden_dot_path()).expect("golden DOT is present");
