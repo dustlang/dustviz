@@ -1,19 +1,19 @@
-// crates/dustviz/tests/render_dot.rs
+// crates/dustviz/tests/render_json.rs
 //
-// Snapshot-style test for DOT rendering.
+// Snapshot-style test for JSON rendering.
 //
-// This test locks the DOT output for the minimal fixture. If the output changes,
+// This test locks the JSON output for the minimal fixture. If the output changes,
 // it should be a deliberate change accompanied by updating the golden file.
 //
 // Golden file location:
-// - tests/fixtures/minimal/program.dot
+// - tests/fixtures/minimal/program.graph.json
 
 use std::fs;
 use std::path::PathBuf;
 
 use dustviz::graph::build_dir_graph;
 use dustviz::input::load_dir_program;
-use dustviz::render::render_dot;
+use dustviz::render::render_json;
 
 fn fixture_dir() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -26,18 +26,18 @@ fn program_path() -> PathBuf {
     fixture_dir().join("program.dir.json")
 }
 
-fn golden_dot_path() -> PathBuf {
-    fixture_dir().join("program.dot")
+fn golden_json_path() -> PathBuf {
+    fixture_dir().join("program.graph.json")
 }
 
 #[test]
-fn dot_output_matches_golden() {
+fn json_output_matches_golden() {
     let program = load_dir_program(&program_path()).expect("fixture parses");
     let graph = build_dir_graph(&program);
 
-    let actual = render_dot(&graph);
+    let actual = render_json(&graph).expect("json renders");
     let expected =
-        fs::read_to_string(&golden_dot_path()).expect("golden DOT file is present");
+        fs::read_to_string(&golden_json_path()).expect("golden JSON file is present");
 
     // Normalize Windows CRLF just in case (CI may vary).
     let actual = actual.replace("\r\n", "\n");
@@ -45,7 +45,7 @@ fn dot_output_matches_golden() {
 
     assert_eq!(
         expected, actual,
-        "DOT output differs from golden file: {}",
-        golden_dot_path().display()
+        "JSON output differs from golden file: {}",
+        golden_json_path().display()
     );
 }
