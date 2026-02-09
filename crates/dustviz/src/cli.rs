@@ -35,6 +35,10 @@ pub enum Command {
         #[arg(long, value_enum, default_value_t = OutputFormat::Dot)]
         format: OutputFormat,
 
+        /// Surface graph annotations (tooltips). Visible labels are unchanged.
+        #[arg(long, default_value_t = false)]
+        annotated: bool,
+
         /// Output path. If omitted, prints to stdout.
         #[arg(long)]
         output: Option<PathBuf>,
