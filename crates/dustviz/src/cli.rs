@@ -31,6 +31,10 @@ pub enum Command {
         #[arg(long)]
         input: PathBuf,
 
+        /// Optional constraint overlay JSON file (e.g., constraints.json)
+        #[arg(long)]
+        constraints: Option<PathBuf>,
+
         /// Output format
         #[arg(long, value_enum, default_value_t = OutputFormat::Dot)]
         format: OutputFormat,
