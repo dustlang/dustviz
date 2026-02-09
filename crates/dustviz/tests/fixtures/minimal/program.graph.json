@@ -1,16 +1,93 @@
 {
   "nodes": [
-    { "id": 0, "kind": "Program", "label": "Program" },
-    { "id": 1, "kind": "Forge", "label": "core" },
-    { "id": 2, "kind": "Proc", "label": "[K] main" },
-    { "id": 3, "kind": "Stmt", "label": "Effect emit \"Hello, Dust!\"" },
-    { "id": 4, "kind": "Stmt", "label": "Return 0" }
+    {
+      "id": 0,
+      "kind": "Program",
+      "label": "Program",
+      "attrs": {
+        "kind": "program"
+      }
+    },
+    {
+      "id": 1,
+      "kind": "Forge",
+      "label": "core",
+      "attrs": {
+        "kind": "forge",
+        "name": "core"
+      }
+    },
+    {
+      "id": 2,
+      "kind": "Proc",
+      "label": "[K] main",
+      "attrs": {
+        "kind": "proc",
+        "name": "main",
+        "param_count": "0",
+        "qualifier_count": "0",
+        "regime": "K",
+        "ret": "Int",
+        "stmt_count": "2",
+        "uses_count": "0"
+      }
+    },
+    {
+      "id": 3,
+      "kind": "Stmt",
+      "label": "Effect emit \"Hello, Dust!\"",
+      "attrs": {
+        "index": "0",
+        "kind": "stmt",
+        "stmt_kind": "Effect"
+      }
+    },
+    {
+      "id": 4,
+      "kind": "Stmt",
+      "label": "Return 0",
+      "attrs": {
+        "index": "1",
+        "kind": "stmt",
+        "stmt_kind": "Return"
+      }
+    }
   ],
   "edges": [
-    { "id": 0, "kind": "contains", "from": 0, "to": 1 },
-    { "id": 1, "kind": "contains", "from": 1, "to": 2 },
-    { "id": 2, "kind": "contains", "from": 2, "to": 3 },
-    { "id": 3, "kind": "next", "from": 3, "to": 4 },
-    { "id": 4, "kind": "contains", "from": 2, "to": 4 }
+    {
+      "id": 0,
+      "kind": "contains",
+      "from": 0,
+      "to": 1,
+      "attrs": {}
+    },
+    {
+      "id": 1,
+      "kind": "contains",
+      "from": 1,
+      "to": 2,
+      "attrs": {}
+    },
+    {
+      "id": 2,
+      "kind": "contains",
+      "from": 2,
+      "to": 3,
+      "attrs": {}
+    },
+    {
+      "id": 3,
+      "kind": "next",
+      "from": 3,
+      "to": 4,
+      "attrs": {}
+    },
+    {
+      "id": 4,
+      "kind": "contains",
+      "from": 2,
+      "to": 4,
+      "attrs": {}
+    }
   ]
 }
