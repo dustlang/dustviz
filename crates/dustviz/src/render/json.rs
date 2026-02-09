@@ -2,19 +2,26 @@
 //
 // JSON renderer for dustviz graphs.
 //
-// v0.1 goal:
+// v0.1+annotations goal:
 // - Deterministic JSON output for the internal `Graph` type.
-// - Suitable for programmatic consumption (frontends, web viewers, etc.).
+// - Include node/edge annotations as `attrs`.
 //
-// Output schema (stable for v0.1):
+// Output schema (stable from this point):
 // {
-//   "nodes": [ { "id": <u32>, "kind": "<string>", "label": "<string>" }, ... ],
-//   "edges": [ { "id": <u32>, "kind": "<string>", "from": <u32>, "to": <u32> }, ... ]
+//   "nodes": [
+//     { "id": <u32>, "kind": "<string>", "label": "<string>", "attrs": { ... } },
+//     ...
+//   ],
+//   "edges": [
+//     { "id": <u32>, "kind": "<string>", "from": <u32>, "to": <u32>, "attrs": { ... } },
+//     ...
+//   ]
 // }
 
 use serde::Serialize;
+use std::collections::BTreeMap;
 
-use crate::graph::{EdgeKind, Graph, NodeKind};
+use crate::graph::{Attr, EdgeKind, Graph, NodeKind};
 
 #[derive(Debug, Serialize)]
 pub struct GraphJson {
@@ -27,6 +34,7 @@ pub struct NodeJson {
     pub id: u32,
     pub kind: String,
     pub label: String,
+    pub attrs: BTreeMap<String, String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -35,6 +43,7 @@ pub struct EdgeJson {
     pub kind: String,
     pub from: u32,
     pub to: u32,
+    pub attrs: BTreeMap<String, String>,
 }
 
 pub fn render_json(graph: &Graph) -> Result<String, serde_json::Error> {
@@ -47,6 +56,7 @@ pub fn render_json(graph: &Graph) -> Result<String, serde_json::Error> {
                 id: n.id,
                 kind,
                 label,
+                attrs: attrs_map(&n.attrs),
             }
         })
         .collect();
@@ -59,11 +69,22 @@ pub fn render_json(graph: &Graph) -> Result<String, serde_json::Error> {
             kind: edge_kind_label(e.kind).to_string(),
             from: e.from,
             to: e.to,
+            attrs: attrs_map(&e.attrs),
         })
         .collect();
 
     let doc = GraphJson { nodes, edges };
     serde_json::to_string_pretty(&doc)
+}
+
+fn attrs_map(attrs: &[Attr]) -> BTreeMap<String, String> {
+    // Deterministic ordering in JSON via BTreeMap.
+    // If duplicate keys occur, the last one wins.
+    let mut map = BTreeMap::new();
+    for a in attrs {
+        map.insert(a.key.clone(), a.value.clone());
+    }
+    map
 }
 
 fn node_kind_and_label(kind: &NodeKind) -> (String, String) {
