@@ -2,6 +2,8 @@
 
 use std::process;
 
+use clap::Parser;
+
 use crate::app::{run, AppConfig};
 use crate::cli::{Cli, Command};
 use crate::util::diagnostics::Diagnostic;
