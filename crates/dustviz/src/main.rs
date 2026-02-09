@@ -9,7 +9,7 @@ use dustviz::app::{run, AppConfig};
 use dustviz::cli::{Cli, Command, OutputFormat};
 use dustviz::graph::build_dir_graph;
 use dustviz::input::{load_dir_program, resolve_input_path};
-use dustviz::render::render_dot;
+use dustviz::render::{render_dot, render_json};
 use dustviz::util::diagnostics::Diagnostic;
 
 fn main() {
@@ -31,36 +31,48 @@ fn main() {
 }
 
 fn cmd_parse(input: PathBuf) -> Result<(), Diagnostic> {
-    // Keep the same path resolution rules as the app layer.
     let _ = run(AppConfig { input })?;
     Ok(())
 }
 
-fn cmd_render(input: PathBuf, format: OutputFormat, output: Option<PathBuf>) -> Result<(), Diagnostic> {
+fn cmd_render(
+    input: PathBuf,
+    format: OutputFormat,
+    output: Option<PathBuf>,
+) -> Result<(), Diagnostic> {
     let input_path = resolve_input_path(&input)?;
     let program = load_dir_program(&input_path)?;
-
     let graph = build_dir_graph(&program);
 
     match format {
         OutputFormat::Dot => {
             let dot = render_dot(&graph);
-            if let Some(out_path) = output {
-                std::fs::write(&out_path, dot).map_err(|e| Diagnostic::Io {
-                    path: out_path,
-                    source: e,
-                })?;
-            } else {
-                print!("{dot}");
-            }
+            write_output(dot, output)?;
         }
-        OutputFormat::Json | OutputFormat::Svg => {
+        OutputFormat::Json => {
+            let json =
+                render_json(&graph).map_err(|e| Diagnostic::message(e.to_string()))?;
+            write_output(json, output)?;
+        }
+        OutputFormat::Svg => {
             return Err(Diagnostic::message(
-                "only --format dot is implemented in v0.1",
+                "SVG rendering is not implemented in v0.1",
             ));
         }
     }
 
+    Ok(())
+}
+
+fn write_output(contents: String, output: Option<PathBuf>) -> Result<(), Diagnostic> {
+    if let Some(path) = output {
+        std::fs::write(&path, contents).map_err(|e| Diagnostic::Io {
+            path,
+            source: e,
+        })?;
+    } else {
+        print!("{contents}");
+    }
     Ok(())
 }
 
