@@ -6,15 +6,38 @@
 // - Deterministic DOT output for the internal `Graph` type.
 // - No external `dot` invocation; this only emits text.
 //
+// v0.1+annotations:
+// - Preserve the existing `render_dot()` output exactly (DOT snapshot stability).
+// - Add `render_dot_annotated()` which surfaces node/edge annotations via Graphviz
+//   `tooltip` attributes (labels remain unchanged).
+//
 // Notes:
 // - Node IDs are stable (assigned by insertion order).
 // - We keep labels human-readable and escape strings for DOT safety.
 
 use std::fmt::Write as _;
 
-use crate::graph::{EdgeKind, Graph, NodeKind};
+use crate::graph::{Attr, EdgeKind, Graph, NodeKind};
 
 pub fn render_dot(graph: &Graph) -> String {
+    render_dot_inner(graph, DotMode::Plain)
+}
+
+/// Render DOT with annotation surfacing (tooltips).
+///
+/// This does not change visible labels; it adds `tooltip="..."` attributes
+/// to nodes/edges when they have annotations.
+pub fn render_dot_annotated(graph: &Graph) -> String {
+    render_dot_inner(graph, DotMode::Annotated)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum DotMode {
+    Plain,
+    Annotated,
+}
+
+fn render_dot_inner(graph: &Graph, mode: DotMode) -> String {
     let mut out = String::new();
 
     writeln!(&mut out, "digraph dustviz {{").unwrap();
@@ -28,12 +51,34 @@ pub fn render_dot(graph: &Graph) -> String {
         let (label, shape) = node_label_and_shape(&n.kind);
         let label = dot_escape(&label);
 
-        writeln!(
-            &mut out,
-            "  n{} [label=\"{}\", shape={}];",
-            n.id, label, shape
-        )
-        .unwrap();
+        match mode {
+            DotMode::Plain => {
+                writeln!(
+                    &mut out,
+                    "  n{} [label=\"{}\", shape={}];",
+                    n.id, label, shape
+                )
+                .unwrap();
+            }
+            DotMode::Annotated => {
+                if n.attrs.is_empty() {
+                    writeln!(
+                        &mut out,
+                        "  n{} [label=\"{}\", shape={}];",
+                        n.id, label, shape
+                    )
+                    .unwrap();
+                } else {
+                    let tooltip = dot_escape(&format_attrs_tooltip(&n.attrs));
+                    writeln!(
+                        &mut out,
+                        "  n{} [label=\"{}\", shape={}, tooltip=\"{}\"];",
+                        n.id, label, shape, tooltip
+                    )
+                    .unwrap();
+                }
+            }
+        }
     }
 
     writeln!(&mut out).unwrap();
@@ -43,12 +88,34 @@ pub fn render_dot(graph: &Graph) -> String {
         let label = edge_label(e.kind);
         let label = dot_escape(label);
 
-        writeln!(
-            &mut out,
-            "  n{} -> n{} [label=\"{}\"];",
-            e.from, e.to, label
-        )
-        .unwrap();
+        match mode {
+            DotMode::Plain => {
+                writeln!(
+                    &mut out,
+                    "  n{} -> n{} [label=\"{}\"];",
+                    e.from, e.to, label
+                )
+                .unwrap();
+            }
+            DotMode::Annotated => {
+                if e.attrs.is_empty() {
+                    writeln!(
+                        &mut out,
+                        "  n{} -> n{} [label=\"{}\"];",
+                        e.from, e.to, label
+                    )
+                    .unwrap();
+                } else {
+                    let tooltip = dot_escape(&format_attrs_tooltip(&e.attrs));
+                    writeln!(
+                        &mut out,
+                        "  n{} -> n{} [label=\"{}\", tooltip=\"{}\"];",
+                        e.from, e.to, label, tooltip
+                    )
+                    .unwrap();
+                }
+            }
+        }
     }
 
     writeln!(&mut out, "}}").unwrap();
@@ -79,9 +146,27 @@ fn edge_label(kind: EdgeKind) -> &'static str {
     }
 }
 
+fn format_attrs_tooltip(attrs: &[Attr]) -> String {
+    // Deterministic order: (key, value) lexicographic by key then value.
+    // Tooltip is multi-line: "key=value\nkey=value"
+    let mut items: Vec<(&str, &str)> = attrs.iter().map(|a| (a.key.as_str(), a.value.as_str())).collect();
+    items.sort_by(|a, b| a.0.cmp(b.0).then(a.1.cmp(b.1)));
+
+    let mut s = String::new();
+    for (i, (k, v)) in items.iter().enumerate() {
+        if i > 0 {
+            s.push('\n');
+        }
+        s.push_str(k);
+        s.push('=');
+        s.push_str(v);
+    }
+    s
+}
+
 fn dot_escape(s: &str) -> String {
     // Minimal DOT string escaping: backslash, quote, and newlines.
-    // Graphviz accepts \n for newlines in labels.
+    // Graphviz accepts \n for newlines in labels/tooltips.
     let mut out = String::with_capacity(s.len());
     for ch in s.chars() {
         match ch {
