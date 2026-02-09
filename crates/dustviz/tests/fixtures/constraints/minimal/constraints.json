@@ -1,0 +1,34 @@
+{
+  "nodes": [
+    {
+      "id": "c1",
+      "kind": "predicate",
+      "label": "x > 0",
+      "ir_ref": {
+        "proc": "main",
+        "stmt_index": 0
+      },
+      "attrs": [
+        { "key": "origin", "value": "type_check" }
+      ]
+    },
+    {
+      "id": "c2",
+      "kind": "rule",
+      "label": "non_negative_int",
+      "attrs": [
+        { "key": "severity", "value": "error" }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "c2",
+      "to": "c1",
+      "kind": "requires",
+      "attrs": [
+        { "key": "reason", "value": "integer domain rule" }
+      ]
+    }
+  ]
+}
