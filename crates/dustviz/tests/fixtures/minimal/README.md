@@ -1,12 +1,12 @@
 This directory contains minimal, deterministic test fixtures for dustviz.
 
-Files here are used exclusively for testing:
+The files here are used only for testing dustviz itself:
 - JSON parsing
 - CLI smoke tests
-- Graph construction tests (later)
+- Graph construction tests (added later)
 
-They are not authoritative, canonical, or normative.
-They are intentionally small and stable.
+They are not canonical, authoritative, or normative.
+They exist solely to support development and CI.
 
 program.dir.json
 ----------------
