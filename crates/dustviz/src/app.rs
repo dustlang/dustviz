@@ -2,16 +2,16 @@
 //
 // Top-level application orchestration for dustviz.
 //
-// Responsibilities:
+// Responsibilities (v0.1):
 // - accept resolved CLI arguments
-// - load external artifacts
-// - prepare data for later graph / render stages
+// - load external DIR program artifact
+// - build an in-memory graph representation
 //
-// At v0.1, this file only wires input loading and basic flow.
-// No graph construction or rendering is performed yet.
+// Rendering is intentionally NOT performed here yet.
 
 use std::path::PathBuf;
 
+use crate::graph::build_dir_graph;
 use crate::input::{load_dir_program, resolve_input_path};
 use crate::model::ir::DirProgram;
 use crate::util::diagnostics::Diagnostic;
@@ -23,12 +23,19 @@ pub struct AppConfig {
 
 /// Run the dustviz application.
 ///
-/// This function is intentionally small and explicit so that:
-/// - errors propagate cleanly
-/// - later stages (graph, render) can be added without refactoring
+/// v0.1 behavior:
+/// - load DIR program
+/// - build graph
+/// - return the parsed program (graph is built for side-effect readiness)
+///
+/// The graph will be surfaced in later steps (rendering / inspection).
 pub fn run(config: AppConfig) -> Result<DirProgram, Diagnostic> {
     let input_path = resolve_input_path(&config.input)?;
     let program = load_dir_program(&input_path)?;
+
+    // Build the graph eagerly to validate structural construction.
+    // Result is intentionally unused for now.
+    let _graph = build_dir_graph(&program);
 
     Ok(program)
 }
