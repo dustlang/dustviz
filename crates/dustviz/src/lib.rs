@@ -1,7 +1,17 @@
-// crates/dustviz/src/graph/mod.rs
+// crates/dustviz/src/lib.rs
+//
+// Library entrypoint for dustviz.
+//
+// This allows unit tests and other crates in the workspace to reuse:
+// - input loading
+// - DIR model types
+// - graph building
+//
+// The `dustviz` binary (`src/main.rs`) remains the CLI entrypoint.
 
-pub mod build;
-
-pub use build::{
-    build_dir_graph, Edge, EdgeId, EdgeKind, Graph, Node, NodeId, NodeKind,
-};
+pub mod app;
+pub mod cli;
+pub mod graph;
+pub mod input;
+pub mod model;
+pub mod util;
