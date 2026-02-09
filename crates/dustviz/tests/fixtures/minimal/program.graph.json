@@ -1,0 +1,16 @@
+{
+  "nodes": [
+    { "id": 0, "kind": "Program", "label": "Program" },
+    { "id": 1, "kind": "Forge", "label": "core" },
+    { "id": 2, "kind": "Proc", "label": "[K] main" },
+    { "id": 3, "kind": "Stmt", "label": "Effect emit \"Hello, Dust!\"" },
+    { "id": 4, "kind": "Stmt", "label": "Return 0" }
+  ],
+  "edges": [
+    { "id": 0, "kind": "contains", "from": 0, "to": 1 },
+    { "id": 1, "kind": "contains", "from": 1, "to": 2 },
+    { "id": 2, "kind": "contains", "from": 2, "to": 3 },
+    { "id": 3, "kind": "next", "from": 3, "to": 4 },
+    { "id": 4, "kind": "contains", "from": 2, "to": 4 }
+  ]
+}
