@@ -3,5 +3,5 @@
 pub mod build;
 
 pub use build::{
-    build_dir_graph, Edge, EdgeId, EdgeKind, Graph, Node, NodeId, NodeKind,
+    build_dir_graph, Attr, Edge, EdgeId, EdgeKind, Graph, Node, NodeId, NodeKind,
 };
