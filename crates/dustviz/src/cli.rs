@@ -25,7 +25,7 @@ pub enum Command {
         input: PathBuf,
     },
 
-    /// Render a graph (placeholder wiring for v0.1; loads input only).
+    /// Render a graph (v0.1: loads input only; rendering lands next).
     Render {
         /// Path to a DIR Program JSON file (e.g., program.dir.json)
         #[arg(long)]
