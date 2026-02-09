@@ -7,8 +7,8 @@ use clap::Parser;
 
 use dustviz::app::{run, AppConfig};
 use dustviz::cli::{Cli, Command, OutputFormat};
-use dustviz::graph::build_dir_graph;
-use dustviz::input::{load_dir_program, resolve_input_path};
+use dustviz::graph::{build_dir_graph, overlay_constraints};
+use dustviz::input::{load_constraints, load_dir_program, resolve_input_path};
 use dustviz::render::{render_dot, render_dot_annotated, render_json};
 use dustviz::util::diagnostics::Diagnostic;
 
@@ -19,10 +19,11 @@ fn main() {
         Command::Parse { input } => cmd_parse(input),
         Command::Render {
             input,
+            constraints,
             format,
             annotated,
             output,
-        } => cmd_render(input, format, annotated, output),
+        } => cmd_render(input, constraints, format, annotated, output),
     };
 
     if let Err(err) = result {
@@ -38,13 +39,21 @@ fn cmd_parse(input: PathBuf) -> Result<(), Diagnostic> {
 
 fn cmd_render(
     input: PathBuf,
+    constraints: Option<PathBuf>,
     format: OutputFormat,
     annotated: bool,
     output: Option<PathBuf>,
 ) -> Result<(), Diagnostic> {
     let input_path = resolve_input_path(&input)?;
     let program = load_dir_program(&input_path)?;
-    let graph = build_dir_graph(&program);
+    let mut graph = build_dir_graph(&program);
+
+    // Optional constraint overlay
+    if let Some(constraints_path) = constraints {
+        let constraints_path = resolve_input_path(&constraints_path)?;
+        let constraints_doc = load_constraints(&constraints_path)?;
+        overlay_constraints(&mut graph, &constraints_doc);
+    }
 
     match format {
         OutputFormat::Dot => {
@@ -56,7 +65,8 @@ fn cmd_render(
             write_output(dot, output)?;
         }
         OutputFormat::Json => {
-            let json = render_json(&graph).map_err(|e| Diagnostic::message(e.to_string()))?;
+            let json =
+                render_json(&graph).map_err(|e| Diagnostic::message(e.to_string()))?;
             write_output(json, output)?;
         }
         OutputFormat::Svg => {
