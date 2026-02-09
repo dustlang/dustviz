@@ -1,0 +1,17 @@
+digraph dustviz {
+  rankdir=LR;
+  node [shape=box, fontname="monospace"];
+  edge [fontname="monospace"];
+
+  n0 [label="Program", shape=oval, tooltip="kind=program"];
+  n1 [label="Forge\ncore", shape=folder, tooltip="kind=forge\nname=core"];
+  n2 [label="Proc [K]\nmain", shape=component, tooltip="kind=proc\nname=main\nparam_count=0\nqualifier_count=0\nregime=K\nret=Int\nstmt_count=2\nuses_count=0"];
+  n3 [label="Stmt\nEffect emit \"Hello, Dust!\"", shape=box, tooltip="index=0\nkind=stmt\nstmt_kind=Effect"];
+  n4 [label="Stmt\nReturn 0", shape=box, tooltip="index=1\nkind=stmt\nstmt_kind=Return"];
+
+  n0 -> n1 [label="contains"];
+  n1 -> n2 [label="contains"];
+  n2 -> n3 [label="contains"];
+  n3 -> n4 [label="next"];
+  n2 -> n4 [label="contains"];
+}
