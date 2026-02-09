@@ -25,17 +25,17 @@ pub enum Command {
         input: PathBuf,
     },
 
-    /// Render a graph (v0.1: loads input only; rendering lands next).
+    /// Render a graph from a DIR program artifact.
     Render {
         /// Path to a DIR Program JSON file (e.g., program.dir.json)
         #[arg(long)]
         input: PathBuf,
 
-        /// Output format (v0.1 accepts the flag but does not render yet)
+        /// Output format
         #[arg(long, value_enum, default_value_t = OutputFormat::Dot)]
         format: OutputFormat,
 
-        /// Output path (v0.1 accepts the flag but does not write yet)
+        /// Output path. If omitted, prints to stdout.
         #[arg(long)]
         output: Option<PathBuf>,
     },
