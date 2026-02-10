@@ -14,4 +14,5 @@ pub mod cli;
 pub mod graph;
 pub mod input;
 pub mod model;
+pub mod render;
 pub mod util;
