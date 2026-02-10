@@ -134,6 +134,7 @@ fn node_label_and_shape(kind: &NodeKind) -> (String, &'static str) {
             (format!("Clause\n{} {} {}", key, op, value), "parallelogram")
         }
         NodeKind::Stmt { label } => (format!("Stmt\n{}", label), "box"),
+        NodeKind::TraceEvent { label } => (label.clone(), "octagon"),
     }
 }
 
@@ -143,6 +144,7 @@ fn edge_label(kind: EdgeKind) -> &'static str {
         EdgeKind::Next => "next",
         EdgeKind::Uses => "uses",
         EdgeKind::Clause => "clause",
+        EdgeKind::Trace => "trace",
     }
 }
 

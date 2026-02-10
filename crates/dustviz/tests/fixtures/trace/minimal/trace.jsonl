@@ -1,0 +1,4 @@
+{"kind":"enter_proc","proc":"main"}
+{"kind":"stmt_exec","proc":"main","stmt_index":0}
+{"kind":"stmt_exec","proc":"main","stmt_index":1}
+{"kind":"constraint_failed","id":"C1","reason":"unproved"}

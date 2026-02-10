@@ -7,9 +7,11 @@ use clap::Parser;
 
 use dustviz::app::{run, AppConfig};
 use dustviz::cli::{Cli, Command, OutputFormat};
-use dustviz::graph::{build_dir_graph, link_constraint_ir_refs, overlay_constraints};
-use dustviz::input::{load_constraints, load_dir_program, resolve_input_path};
-use dustviz::render::{render_dot, render_dot_annotated, render_json};
+use dustviz::graph::{
+    build_dir_graph, focus_graph, link_constraint_ir_refs, overlay_constraints, overlay_trace,
+};
+use dustviz::input::{load_constraints, load_dir_program, load_trace, resolve_input_path};
+use dustviz::render::{render_dot, render_dot_annotated, render_json, render_svg};
 use dustviz::util::diagnostics::Diagnostic;
 
 fn main() {
@@ -20,10 +22,12 @@ fn main() {
         Command::Render {
             input,
             constraints,
+            trace,
             format,
             annotated,
+            focus,
             output,
-        } => cmd_render(input, constraints, format, annotated, output),
+        } => cmd_render(input, constraints, trace, format, annotated, focus, output),
     };
 
     if let Err(err) = result {
@@ -40,8 +44,10 @@ fn cmd_parse(input: PathBuf) -> Result<(), Diagnostic> {
 fn cmd_render(
     input: PathBuf,
     constraints: Option<PathBuf>,
+    trace: Option<PathBuf>,
     format: OutputFormat,
     annotated: bool,
+    focus: bool,
     output: Option<PathBuf>,
 ) -> Result<(), Diagnostic> {
     let input_path = resolve_input_path(&input)?;
@@ -55,6 +61,26 @@ fn cmd_render(
         let map = overlay_constraints(&mut graph, &constraints_doc);
         link_constraint_ir_refs(&mut graph, &constraints_doc, &map);
     }
+
+    let focus_nodes = if let Some(trace_path) = trace {
+        let trace_path = resolve_input_path(&trace_path)?;
+        let trace_doc = load_trace(&trace_path)?;
+        let overlay = overlay_trace(&mut graph, &trace_doc);
+        Some(overlay.focus_nodes)
+    } else {
+        None
+    };
+
+    let graph = if focus {
+        let Some(nodes) = focus_nodes.as_ref() else {
+            return Err(Diagnostic::message(
+                "--focus requires a trace file via --trace",
+            ));
+        };
+        focus_graph(&graph, nodes)
+    } else {
+        graph
+    };
 
     match format {
         OutputFormat::Dot => {
@@ -70,9 +96,13 @@ fn cmd_render(
             write_output(json, output)?;
         }
         OutputFormat::Svg => {
-            return Err(Diagnostic::message(
-                "SVG rendering is not implemented in v0.1",
-            ));
+            let dot = if annotated {
+                render_dot_annotated(&graph)
+            } else {
+                render_dot(&graph)
+            };
+            let svg = render_svg(&dot)?;
+            write_output(svg, output)?;
         }
     }
 

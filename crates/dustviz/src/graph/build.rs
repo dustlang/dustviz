@@ -39,6 +39,7 @@ pub enum EdgeKind {
     Next,
     Uses,
     Clause,
+    Trace,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -51,6 +52,7 @@ pub enum NodeKind {
     Bind { source: String, target: String },
     Clause { key: String, op: String, value: String },
     Stmt { label: String },
+    TraceEvent { label: String },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

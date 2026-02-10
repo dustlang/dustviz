@@ -35,6 +35,10 @@ pub enum Command {
         #[arg(long)]
         constraints: Option<PathBuf>,
 
+        /// Optional trace event JSONL file (e.g., trace.jsonl)
+        #[arg(long)]
+        trace: Option<PathBuf>,
+
         /// Output format
         #[arg(long, value_enum, default_value_t = OutputFormat::Dot)]
         format: OutputFormat,
@@ -42,6 +46,10 @@ pub enum Command {
         /// Surface graph annotations (tooltips). Visible labels are unchanged.
         #[arg(long, default_value_t = false)]
         annotated: bool,
+
+        /// Focus rendering on nodes touched by trace events.
+        #[arg(long, default_value_t = false)]
+        focus: bool,
 
         /// Output path. If omitted, prints to stdout.
         #[arg(long)]

@@ -99,6 +99,7 @@ fn node_kind_and_label(kind: &NodeKind) -> (String, String) {
             ("Clause".to_string(), format!("{} {} {}", key, op, value))
         }
         NodeKind::Stmt { label } => ("Stmt".to_string(), label.clone()),
+        NodeKind::TraceEvent { label } => ("TraceEvent".to_string(), label.clone()),
     }
 }
 
@@ -108,5 +109,6 @@ fn edge_kind_label(kind: EdgeKind) -> &'static str {
         EdgeKind::Next => "next",
         EdgeKind::Uses => "uses",
         EdgeKind::Clause => "clause",
+        EdgeKind::Trace => "trace",
     }
 }

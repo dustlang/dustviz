@@ -1,0 +1,167 @@
+{
+  "nodes": [
+    {
+      "id": 0,
+      "kind": "Program",
+      "label": "Program",
+      "attrs": {
+        "kind": "program"
+      }
+    },
+    {
+      "id": 1,
+      "kind": "Forge",
+      "label": "core",
+      "attrs": {
+        "kind": "forge",
+        "name": "core"
+      }
+    },
+    {
+      "id": 2,
+      "kind": "Proc",
+      "label": "[K] main",
+      "attrs": {
+        "kind": "proc",
+        "name": "main",
+        "param_count": "0",
+        "qualifier_count": "0",
+        "regime": "K",
+        "ret": "Int",
+        "stmt_count": "2",
+        "uses_count": "0"
+      }
+    },
+    {
+      "id": 3,
+      "kind": "Stmt",
+      "label": "Effect emit \"Hello, Dust!\"",
+      "attrs": {
+        "index": "0",
+        "kind": "stmt",
+        "stmt_kind": "Effect"
+      }
+    },
+    {
+      "id": 4,
+      "kind": "Stmt",
+      "label": "Return 0",
+      "attrs": {
+        "index": "1",
+        "kind": "stmt",
+        "stmt_kind": "Return"
+      }
+    },
+    {
+      "id": 5,
+      "kind": "TraceEvent",
+      "label": "Trace\nEnterProc main",
+      "attrs": {
+        "event_index": "0",
+        "event_kind": "enter_proc",
+        "kind": "trace_event",
+        "proc": "main"
+      }
+    },
+    {
+      "id": 6,
+      "kind": "TraceEvent",
+      "label": "Trace\nStmtExec main:0",
+      "attrs": {
+        "event_index": "1",
+        "event_kind": "stmt_exec",
+        "kind": "trace_event",
+        "proc": "main",
+        "stmt_index": "0"
+      }
+    },
+    {
+      "id": 7,
+      "kind": "TraceEvent",
+      "label": "Trace\nStmtExec main:1",
+      "attrs": {
+        "event_index": "2",
+        "event_kind": "stmt_exec",
+        "kind": "trace_event",
+        "proc": "main",
+        "stmt_index": "1"
+      }
+    },
+    {
+      "id": 8,
+      "kind": "TraceEvent",
+      "label": "Trace\nConstraintFailed C1\nunproved",
+      "attrs": {
+        "constraint_id": "C1",
+        "event_index": "3",
+        "event_kind": "constraint_failed",
+        "kind": "trace_event",
+        "reason": "unproved"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": 0,
+      "kind": "contains",
+      "from": 0,
+      "to": 1,
+      "attrs": {}
+    },
+    {
+      "id": 1,
+      "kind": "contains",
+      "from": 1,
+      "to": 2,
+      "attrs": {}
+    },
+    {
+      "id": 2,
+      "kind": "contains",
+      "from": 2,
+      "to": 3,
+      "attrs": {}
+    },
+    {
+      "id": 3,
+      "kind": "next",
+      "from": 3,
+      "to": 4,
+      "attrs": {}
+    },
+    {
+      "id": 4,
+      "kind": "contains",
+      "from": 2,
+      "to": 4,
+      "attrs": {}
+    },
+    {
+      "id": 5,
+      "kind": "trace",
+      "from": 5,
+      "to": 2,
+      "attrs": {
+        "trace_event": "0"
+      }
+    },
+    {
+      "id": 6,
+      "kind": "trace",
+      "from": 6,
+      "to": 3,
+      "attrs": {
+        "trace_event": "1"
+      }
+    },
+    {
+      "id": 7,
+      "kind": "trace",
+      "from": 7,
+      "to": 4,
+      "attrs": {
+        "trace_event": "2"
+      }
+    }
+  ]
+}
