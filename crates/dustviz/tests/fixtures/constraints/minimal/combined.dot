@@ -9,14 +9,14 @@ digraph dustviz {
   n3 [label="Stmt\nEffect emit \"Hello, Dust!\"", shape=box];
   n4 [label="Stmt\nReturn 0", shape=box];
 
-  n5 [label="Clause\nconstraint predicate", shape=parallelogram];
-  n6 [label="Clause\nconstraint rule", shape=parallelogram];
+  n5 [label="Clause\nconstraint x > 0 Predicate", shape=parallelogram];
+  n6 [label="Clause\nconstraint non_negative_int Rule", shape=parallelogram];
 
   n0 -> n1 [label="contains"];
   n1 -> n2 [label="contains"];
   n2 -> n3 [label="contains"];
-  n3 -> n4 [label="next"];
   n2 -> n4 [label="contains"];
+  n3 -> n4 [label="next"];
 
   n6 -> n5 [label="contains"];
 }

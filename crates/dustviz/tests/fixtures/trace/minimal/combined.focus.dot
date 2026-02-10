@@ -12,8 +12,8 @@ digraph dustviz {
   n8 [label="Trace\nConstraintFailed C1\nunproved", shape=octagon];
 
   n2 -> n3 [label="contains"];
-  n3 -> n4 [label="next"];
   n2 -> n4 [label="contains"];
+  n3 -> n4 [label="next"];
   n5 -> n2 [label="trace"];
   n6 -> n3 [label="trace"];
   n7 -> n4 [label="trace"];

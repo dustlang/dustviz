@@ -124,15 +124,15 @@
     },
     {
       "id": 3,
-      "kind": "next",
-      "from": 3,
+      "kind": "contains",
+      "from": 2,
       "to": 4,
       "attrs": {}
     },
     {
       "id": 4,
-      "kind": "contains",
-      "from": 2,
+      "kind": "next",
+      "from": 3,
       "to": 4,
       "attrs": {}
     },
