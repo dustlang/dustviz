@@ -17,6 +17,5 @@ digraph dustviz {
   n2 -> n3 [label="contains"];
   n2 -> n4 [label="contains"];
   n3 -> n4 [label="next"];
-
   n6 -> n5 [label="contains"];
 }
