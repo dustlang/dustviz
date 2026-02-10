@@ -48,6 +48,8 @@ fn json_with_trace_matches_golden() {
 
     let actual = actual.replace("\r\n", "\n");
     let expected = expected.replace("\r\n", "\n");
+    let actual = actual.trim_end_matches('\n');
+    let expected = expected.trim_end_matches('\n');
 
     assert_eq!(
         expected, actual,
