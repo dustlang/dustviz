@@ -8,7 +8,6 @@ digraph dustviz {
   n2 [label="Proc [K]\nmain", shape=component];
   n3 [label="Stmt\nEffect emit \"Hello, Dust!\"", shape=box];
   n4 [label="Stmt\nReturn 0", shape=box];
-
   n5 [label="Clause\nconstraint x > 0 Predicate", shape=parallelogram];
   n6 [label="Clause\nconstraint non_negative_int Rule", shape=parallelogram];
 
