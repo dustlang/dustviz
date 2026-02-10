@@ -18,9 +18,7 @@
 use std::collections::HashMap;
 
 use crate::graph::{Attr, EdgeKind, Graph, NodeId, NodeKind};
-use crate::model::constraints::{
-    ConstraintEdgeKind, ConstraintNodeKind, ConstraintsDocument,
-};
+use crate::model::constraints::{ConstraintEdgeKind, ConstraintsDocument};
 
 /// Overlay constraints onto an existing graph.
 ///
@@ -56,11 +54,7 @@ pub fn overlay_constraints(
         let Some(&from) = map.get(&edge.from.0) else { continue };
         let Some(&to) = map.get(&edge.to.0) else { continue };
 
-        let edge_id = graph.add_edge(
-            map_constraint_edge_kind(edge.kind),
-            from,
-            to,
-        );
+        let edge_id = graph.add_edge(map_constraint_edge_kind(&edge.kind), from, to);
 
         for attr in &edge.attrs {
             graph.add_edge_attr(edge_id, attr.key.clone(), attr.value.clone());
@@ -70,7 +64,7 @@ pub fn overlay_constraints(
     map
 }
 
-fn map_constraint_edge_kind(kind: ConstraintEdgeKind) -> EdgeKind {
+fn map_constraint_edge_kind(kind: &ConstraintEdgeKind) -> EdgeKind {
     match kind {
         ConstraintEdgeKind::DependsOn => EdgeKind::Uses,
         ConstraintEdgeKind::Justifies => EdgeKind::Clause,

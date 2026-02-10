@@ -125,7 +125,7 @@ fn index_stmts_by_proc(
     out
 }
 
-fn get_attr_value(attrs: &[crate::graph::Attr], key: &str) -> Option<&str> {
+fn get_attr_value<'a>(attrs: &'a [crate::graph::Attr], key: &str) -> Option<&'a str> {
     for a in attrs {
         if a.key == key {
             return Some(a.value.as_str());

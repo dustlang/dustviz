@@ -162,7 +162,7 @@ fn index_constraints(graph: &Graph) -> HashMap<String, NodeId> {
     map
 }
 
-fn get_attr_value(attrs: &[Attr], key: &str) -> Option<&str> {
+fn get_attr_value<'a>(attrs: &'a [Attr], key: &str) -> Option<&'a str> {
     for a in attrs {
         if a.key == key {
             return Some(a.value.as_str());
