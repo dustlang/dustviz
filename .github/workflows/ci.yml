@@ -9,11 +9,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Rust
+      - name: Install Rust (stable)
         uses: dtolnay/rust-toolchain@stable
 
       - name: Run tests
-        run: cargo test --manifest-path crates/dustviz/Cargo.toml
+        run: cargo test --workspace --verbose
