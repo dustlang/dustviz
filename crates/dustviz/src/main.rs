@@ -1,4 +1,9 @@
-// crates/dustviz/src/main.rs
+// File: main.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Executable entry point for dustviz CLI tool.
+//   Provides visualization of Dust execution traces and constraints.
+//   Supports multiple output formats (DOT, SVG, JSON).
 
 use std::path::PathBuf;
 use std::process;

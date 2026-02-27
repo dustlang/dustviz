@@ -1,4 +1,8 @@
-// crates/dustviz/src/input/mod.rs
+// File: mod.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Input module - loading DIR artifacts and traces.
+//   Submodules: discover, load, load_constraints, load_trace.
 
 pub mod discover;
 pub mod load;

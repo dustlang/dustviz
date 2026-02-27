@@ -1,11 +1,10 @@
-// crates/dustviz/src/graph/link_ir_refs.rs
-//
-// Link constraint nodes to IR nodes using `ir_ref` when possible.
-//
-// This module adds edges from constraint nodes (already overlaid into the graph)
-// to IR nodes (Proc / Stmt) when resolvable.
-//
-// Design constraints:
+// File: link_ir_refs.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Link constraint nodes to IR nodes using ir_ref when possible.
+//   Adds edges from constraint to IR nodes (Proc/Stmt) when resolvable.
+
+use crate::graph::{Edge, EdgeKind, Graph, NodeKind};
 // - No semantic validation.
 // - Deterministic linking based on stable traversal.
 // - Does not change existing IR-only snapshots unless constraints are supplied.
@@ -30,11 +29,19 @@ pub fn link_constraint_ir_refs(
     let stmt_index_by_proc = index_stmts_by_proc(graph, &proc_name_to_id);
 
     for cnode in &constraints.nodes {
-        let Some(ir_ref) = &cnode.ir_ref else { continue };
-        let Some(&cnode_id) = constraint_node_map.get(&cnode.id.0) else { continue };
+        let Some(ir_ref) = &cnode.ir_ref else {
+            continue;
+        };
+        let Some(&cnode_id) = constraint_node_map.get(&cnode.id.0) else {
+            continue;
+        };
 
-        let Some(proc_name) = ir_ref.proc.as_deref() else { continue };
-        let Some(&proc_id) = proc_name_to_id.get(proc_name) else { continue };
+        let Some(proc_name) = ir_ref.proc.as_deref() else {
+            continue;
+        };
+        let Some(&proc_id) = proc_name_to_id.get(proc_name) else {
+            continue;
+        };
 
         // If stmt_index is present, try to link to that stmt; otherwise link to proc.
         if let Some(stmt_index) = ir_ref.stmt_index {
@@ -100,7 +107,9 @@ fn index_stmts_by_proc(
             continue;
         }
 
-        let Some(proc_name) = proc_id_to_name.get(&e.from) else { continue };
+        let Some(proc_name) = proc_id_to_name.get(&e.from) else {
+            continue;
+        };
 
         let stmt_node = match graph.nodes.get(e.to as usize) {
             Some(n) => n,
@@ -115,7 +124,9 @@ fn index_stmts_by_proc(
             continue;
         };
 
-        let Ok(idx) = index_val.parse::<usize>() else { continue };
+        let Ok(idx) = index_val.parse::<usize>() else {
+            continue;
+        };
 
         out.entry(proc_name.clone())
             .or_default()

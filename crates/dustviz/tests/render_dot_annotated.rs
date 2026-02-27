@@ -1,11 +1,10 @@
-// crates/dustviz/tests/render_dot_annotated.rs
-//
-// Snapshot-style test for annotated DOT rendering.
-//
-// This test locks the annotated DOT output for the minimal fixture. If the output changes,
-// it should be a deliberate change accompanied by updating the golden file.
-//
-// Golden file location:
+// File: render_dot_annotated.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Snapshot-style test for annotated DOT rendering.
+//   Locks annotated DOT output for minimal fixture.
+
+use std::fs;
 // - tests/fixtures/minimal/program.annotated.dot
 
 use std::fs;
@@ -43,7 +42,8 @@ fn annotated_dot_output_matches_golden() {
     let expected = expected.replace("\r\n", "\n");
 
     assert_eq!(
-        expected, actual,
+        expected,
+        actual,
         "annotated DOT output differs from golden file: {}",
         golden_dot_path().display()
     );

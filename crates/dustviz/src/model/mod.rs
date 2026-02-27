@@ -1,4 +1,8 @@
-// crates/dustviz/src/model/mod.rs
+// File: mod.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Model module - DIR model types for visualization.
+//   Submodules: constraints, ir, trace.
 
 pub mod constraints;
 pub mod ir;

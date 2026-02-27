@@ -1,6 +1,7 @@
-// crates/dustviz/tests/render_trace_focus_dot.rs
-//
-// Snapshot-style test for focus DOT rendering with trace overlay.
+// File: render_trace_focus_dot.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Snapshot-style test for focus DOT rendering with trace overlay.
 
 use std::fs;
 use std::path::PathBuf;
@@ -52,7 +53,8 @@ fn dot_focus_with_trace_matches_golden() {
     let expected = expected.replace("\r\n", "\n");
 
     assert_eq!(
-        expected, actual,
+        expected,
+        actual,
         "DOT output differs from golden file: {}",
         golden_dot_path().display()
     );

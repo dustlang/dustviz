@@ -1,6 +1,7 @@
-// crates/dustviz/tests/render_trace_json.rs
-//
-// Snapshot-style test for JSON rendering with trace overlay.
+// File: render_trace_json.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Snapshot-style test for JSON rendering with trace overlay.
 
 use std::fs;
 use std::path::PathBuf;
@@ -52,7 +53,8 @@ fn json_with_trace_matches_golden() {
     let expected = expected.trim_end_matches('\n');
 
     assert_eq!(
-        expected, actual,
+        expected,
+        actual,
         "JSON output differs from golden file: {}",
         golden_json_path().display()
     );

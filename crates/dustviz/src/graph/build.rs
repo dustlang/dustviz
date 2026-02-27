@@ -1,13 +1,11 @@
-// crates/dustviz/src/graph/build.rs
-//
-// Build an in-memory graph from a parsed DIR program.
-//
-// v0.1+annotations goal:
-// - Deterministically convert `DirProgram` into a graph structure that can later be rendered.
-// - Preserve stable node ordering and IDs derived from traversal order.
-// - Attach lightweight annotations (key/value) to nodes/edges for richer visualization,
-//   without changing DOT/JSON render outputs yet (snapshots remain stable).
-//
+// File: build.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Build in-memory graph from parsed DIR program.
+//   v0.1+annotations: Deterministic conversion, stable node ordering,
+//   lightweight annotations for richer visualization.
+
+use crate::model::ir::Program;
 // This is a visualization graph:
 // - Strings like `ty`, `expr`, and `predicate` are treated as opaque labels here.
 
@@ -45,14 +43,34 @@ pub enum EdgeKind {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum NodeKind {
     Program,
-    Forge { name: String },
-    Shape { name: String },
-    Proc { regime: String, name: String },
-    Uses { resource: String },
-    Bind { source: String, target: String },
-    Clause { key: String, op: String, value: String },
-    Stmt { label: String },
-    TraceEvent { label: String },
+    Forge {
+        name: String,
+    },
+    Shape {
+        name: String,
+    },
+    Proc {
+        regime: String,
+        name: String,
+    },
+    Uses {
+        resource: String,
+    },
+    Bind {
+        source: String,
+        target: String,
+    },
+    Clause {
+        key: String,
+        op: String,
+        value: String,
+    },
+    Stmt {
+        label: String,
+    },
+    TraceEvent {
+        label: String,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -117,13 +135,23 @@ impl Graph {
         id
     }
 
-    pub fn add_node_attr(&mut self, node_id: NodeId, key: impl Into<String>, value: impl Into<String>) {
+    pub fn add_node_attr(
+        &mut self,
+        node_id: NodeId,
+        key: impl Into<String>,
+        value: impl Into<String>,
+    ) {
         if let Some(n) = self.nodes.get_mut(node_id as usize) {
             n.attrs.push(Attr::new(key, value));
         }
     }
 
-    pub fn add_edge_attr(&mut self, edge_id: EdgeId, key: impl Into<String>, value: impl Into<String>) {
+    pub fn add_edge_attr(
+        &mut self,
+        edge_id: EdgeId,
+        key: impl Into<String>,
+        value: impl Into<String>,
+    ) {
         if let Some(e) = self.edges.get_mut(edge_id as usize) {
             e.attrs.push(Attr::new(key, value));
         }
@@ -323,26 +351,34 @@ mod tests {
         let graph = build_dir_graph(&program);
 
         assert!(
-            graph.nodes.iter().any(|n| matches!(n.kind, NodeKind::Program)),
+            graph
+                .nodes
+                .iter()
+                .any(|n| matches!(n.kind, NodeKind::Program)),
             "expected a Program node"
         );
 
         assert!(
-            graph.nodes
+            graph
+                .nodes
                 .iter()
                 .any(|n| matches!(&n.kind, NodeKind::Forge { name } if name == "core")),
             "expected Forge(core)"
         );
 
         assert!(
-            graph.nodes
+            graph
+                .nodes
                 .iter()
                 .any(|n| matches!(&n.kind, NodeKind::Proc { name, .. } if name == "main")),
             "expected Proc(main)"
         );
 
         assert!(
-            graph.nodes.iter().any(|n| matches!(&n.kind, NodeKind::Stmt { .. })),
+            graph
+                .nodes
+                .iter()
+                .any(|n| matches!(&n.kind, NodeKind::Stmt { .. })),
             "expected at least one Stmt node"
         );
 
@@ -410,7 +446,8 @@ mod tests {
         let b = stmt_ids[1];
 
         assert!(
-            graph.edges
+            graph
+                .edges
                 .iter()
                 .any(|e| e.kind == EdgeKind::Next && e.from == a && e.to == b),
             "expected Next edge between first and second statement nodes"
@@ -436,6 +473,9 @@ mod tests {
         let has_stmt_count = proc.attrs.iter().any(|a| a.key == "stmt_count");
 
         assert!(has_regime, "expected proc to have regime annotation");
-        assert!(has_stmt_count, "expected proc to have stmt_count annotation");
+        assert!(
+            has_stmt_count,
+            "expected proc to have stmt_count annotation"
+        );
     }
 }

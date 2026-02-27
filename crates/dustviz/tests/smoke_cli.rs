@@ -1,11 +1,10 @@
-// crates/dustviz/tests/smoke_cli.rs
-//
-// End-to-end smoke tests for the dustviz CLI.
-//
-// These tests verify that:
-// - the binary launches
-// - the `parse` command accepts a valid DIR artifact
-// - failures are reported with a non-zero exit code
+// File: smoke_cli.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   End-to-end smoke tests for dustviz CLI.
+//   Verifies binary launches, parse command works, failures reported.
+
+use assert_cmd::prelude::*;
 //
 // No graph or rendering behavior is tested here.
 
@@ -25,9 +24,7 @@ fn fixture_path() -> PathBuf {
 fn parse_valid_dir_program_succeeds() {
     let mut cmd = Command::cargo_bin("dustviz").expect("binary builds");
 
-    cmd.arg("parse")
-        .arg("--input")
-        .arg(fixture_path());
+    cmd.arg("parse").arg("--input").arg(fixture_path());
 
     cmd.assert().success();
 }

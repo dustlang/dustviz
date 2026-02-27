@@ -1,11 +1,10 @@
-// crates/dustviz/tests/render_json.rs
-//
-// Snapshot-style test for JSON rendering.
-//
-// This test locks the JSON output for the minimal fixture. If the output changes,
-// it should be a deliberate change accompanied by updating the golden file.
-//
-// Golden file location:
+// File: render_dot.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Snapshot-style test for DOT rendering.
+//   Locks DOT output for minimal fixture.
+
+use std::fs;
 // - tests/fixtures/minimal/program.graph.json
 
 use std::fs;
@@ -36,8 +35,7 @@ fn json_output_matches_golden() {
     let graph = build_dir_graph(&program);
 
     let actual = render_json(&graph).expect("json renders");
-    let expected =
-        fs::read_to_string(&golden_json_path()).expect("golden JSON file is present");
+    let expected = fs::read_to_string(&golden_json_path()).expect("golden JSON file is present");
 
     // Normalize Windows CRLF just in case (CI may vary).
     let actual = actual.replace("\r\n", "\n");
@@ -46,7 +44,8 @@ fn json_output_matches_golden() {
     let expected = expected.trim_end_matches('\n');
 
     assert_eq!(
-        expected, actual,
+        expected,
+        actual,
         "JSON output differs from golden file: {}",
         golden_json_path().display()
     );

@@ -1,11 +1,11 @@
-// crates/dustviz/src/graph/overlay_constraints.rs
-//
-// Overlay constraint documents onto an existing IR graph.
-//
-// This module merges constraint nodes and edges into the unified visualization graph.
-// It does NOT:
-// - validate constraints
-// - resolve correctness
+// File: overlay_constraints.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Overlay constraint documents onto existing IR graph.
+//   Merges constraint nodes/edges into visualization graph.
+//   Does NOT validate or resolve correctness.
+
+use crate::graph::{Edge, EdgeKind, Graph, Node, NodeKind};
 // - enforce IR references
 //
 // v0.2 behavior:
@@ -51,8 +51,12 @@ pub fn overlay_constraints(
 
     // 2. Add constraint edges
     for edge in &constraints.edges {
-        let Some(&from) = map.get(&edge.from.0) else { continue };
-        let Some(&to) = map.get(&edge.to.0) else { continue };
+        let Some(&from) = map.get(&edge.from.0) else {
+            continue;
+        };
+        let Some(&to) = map.get(&edge.to.0) else {
+            continue;
+        };
 
         let edge_id = graph.add_edge(map_constraint_edge_kind(&edge.kind), from, to);
 

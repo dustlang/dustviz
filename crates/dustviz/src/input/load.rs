@@ -1,12 +1,11 @@
-// crates/dustviz/src/input/load.rs
-//
-// Loader for DIR Program JSON artifacts.
-//
-// This module is responsible only for:
-// - reading a file from disk
-// - parsing JSON into the typed DIR model
-//
-// It performs no validation beyond syntactic correctness.
+// File: load.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Loader for DIR Program JSON artifacts.
+//   Reads files and parses JSON into typed DIR model.
+//   No validation beyond syntactic correctness.
+
+use crate::model::ir::Program;
 
 use std::path::Path;
 

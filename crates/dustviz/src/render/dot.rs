@@ -1,11 +1,11 @@
-// crates/dustviz/src/render/dot.rs
-//
-// Graphviz DOT renderer for dustviz graphs.
-//
-// v0.1 goal:
-// - Deterministic DOT output for the internal `Graph` type.
-// - No external `dot` invocation; this only emits text.
-//
+// File: dot.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Graphviz DOT renderer for dustviz graphs.
+//   v0.1: Deterministic DOT output for internal Graph type.
+//   No external dot invocation; emits text only.
+
+use crate::graph::Graph;
 // v0.1+annotations:
 // - Preserve the existing `render_dot()` output exactly (DOT snapshot stability).
 // - Add `render_dot_annotated()` which surfaces node/edge annotations via Graphviz
@@ -151,7 +151,10 @@ fn edge_label(kind: EdgeKind) -> &'static str {
 fn format_attrs_tooltip(attrs: &[Attr]) -> String {
     // Deterministic order: (key, value) lexicographic by key then value.
     // Tooltip is multi-line: "key=value\nkey=value"
-    let mut items: Vec<(&str, &str)> = attrs.iter().map(|a| (a.key.as_str(), a.value.as_str())).collect();
+    let mut items: Vec<(&str, &str)> = attrs
+        .iter()
+        .map(|a| (a.key.as_str(), a.value.as_str()))
+        .collect();
     items.sort_by(|a, b| a.0.cmp(b.0).then(a.1.cmp(b.1)));
 
     let mut s = String::new();

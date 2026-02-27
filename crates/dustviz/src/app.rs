@@ -1,13 +1,11 @@
-// crates/dustviz/src/app.rs
-//
-// Top-level application orchestration for dustviz.
-//
-// Responsibilities (v0.1):
-// - accept resolved CLI arguments
-// - load external DIR program artifact
-// - build an in-memory graph representation
-//
-// Rendering is intentionally NOT performed here yet.
+// File: app.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Top-level application orchestration for dustviz.
+//   Accepts CLI arguments, loads DIR artifacts, builds graph.
+//   Rendering is separate.
+
+use dustviz::cli::Cli;
 
 use std::path::PathBuf;
 

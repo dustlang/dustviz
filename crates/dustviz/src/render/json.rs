@@ -1,11 +1,11 @@
-// crates/dustviz/src/render/json.rs
-//
-// JSON renderer for dustviz graphs.
-//
-// v0.1+annotations goal:
-// - Deterministic JSON output for the internal `Graph` type.
-// - Include node/edge annotations as `attrs`.
-//
+// File: json.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   JSON renderer for dustviz graphs.
+//   v0.1+: Deterministic JSON output for internal Graph type.
+//   Includes node/edge annotations as attrs.
+
+use crate::graph::Graph;
 // Output schema (stable from this point):
 // {
 //   "nodes": [
@@ -94,7 +94,9 @@ fn node_kind_and_label(kind: &NodeKind) -> (String, String) {
         NodeKind::Shape { name } => ("Shape".to_string(), name.clone()),
         NodeKind::Proc { regime, name } => ("Proc".to_string(), format!("[{}] {}", regime, name)),
         NodeKind::Uses { resource } => ("Uses".to_string(), resource.clone()),
-        NodeKind::Bind { source, target } => ("Bind".to_string(), format!("{} -> {}", source, target)),
+        NodeKind::Bind { source, target } => {
+            ("Bind".to_string(), format!("{} -> {}", source, target))
+        }
         NodeKind::Clause { key, op, value } => {
             ("Clause".to_string(), format!("{} {} {}", key, op, value))
         }

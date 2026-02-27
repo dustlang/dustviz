@@ -1,11 +1,10 @@
-// crates/dustviz/src/graph/overlay_trace.rs
-//
-// Overlay trace events onto an existing graph.
-//
-// v0.3 behavior:
-// - Each trace event becomes a graph node (TraceEvent).
-// - If the event maps to an IR or constraint node, add a Trace edge.
-// - Track focus nodes touched by the trace for optional focus rendering.
+// File: overlay_trace.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Overlay trace events onto existing graph.
+//   v0.3: Trace events become nodes, mapped to IR/constraint nodes via Trace edges.
+
+use crate::graph::{Edge, EdgeId, EdgeKind, Graph, Node, NodeId, NodeKind};
 
 use std::collections::{HashMap, HashSet};
 
@@ -127,7 +126,9 @@ fn index_stmts_by_proc(
             continue;
         }
 
-        let Some(proc_name) = proc_id_to_name.get(&e.from) else { continue };
+        let Some(proc_name) = proc_id_to_name.get(&e.from) else {
+            continue;
+        };
 
         let stmt_node = match graph.nodes.get(e.to as usize) {
             Some(n) => n,
@@ -142,7 +143,9 @@ fn index_stmts_by_proc(
             continue;
         };
 
-        let Ok(idx) = index_val.parse::<usize>() else { continue };
+        let Ok(idx) = index_val.parse::<usize>() else {
+            continue;
+        };
 
         out.entry(proc_name.clone())
             .or_default()

@@ -1,4 +1,8 @@
-// crates/dustviz/src/render/mod.rs
+// File: mod.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Render module - visualization output generators.
+//   Submodules: dot, json, svg.
 
 pub mod dot;
 pub mod json;

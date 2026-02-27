@@ -1,8 +1,8 @@
-// crates/dustviz/src/input/load_trace.rs
-//
-// Loader for trace JSONL (*.trace.jsonl) artifacts.
-//
-// Each non-empty line must be a JSON object matching TraceEventKind.
+// File: load_trace.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Loader for trace JSONL (*.trace.jsonl) artifacts.
+//   Each non-empty line is a JSON object matching TraceEventKind.
 
 use std::path::Path;
 

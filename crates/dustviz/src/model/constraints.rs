@@ -1,13 +1,11 @@
-// crates/dustviz/src/model/constraints.rs
-//
-// Constraint model for dustviz.
-//
-// This module defines a minimal, typed representation of constraint artifacts
-// that can be overlaid onto the core IR graph.
-//
-// Semantics are intentionally opaque:
-// - dustviz does not interpret or validate constraints
-// - all strings are treated as labels
+// File: constraints.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Constraint model for dustviz.
+//   Minimal typed representation of constraint artifacts overlayable on IR graph.
+//   Semantics intentionally opaque - dustviz doesn't interpret constraints.
+
+use serde::Deserialize;
 //
 // v0.2 scope:
 // - constraint nodes

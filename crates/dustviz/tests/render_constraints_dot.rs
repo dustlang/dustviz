@@ -1,11 +1,9 @@
-// crates/dustviz/tests/render_constraints_dot.rs
-//
-// Snapshot-style test for DOT rendering with constraint overlay + IR-reference linking.
-//
-// This test locks the DOT output for the combined graph:
-// - IR fixture: tests/fixtures/minimal/program.dir.json
-// - Constraints fixture: tests/fixtures/constraints/minimal/constraints.json
-//
+// File: render_constraints_dot.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Snapshot-style test for DOT rendering with constraint overlay + IR linking.
+
+use std::fs;
 // Golden file location:
 // - tests/fixtures/constraints/minimal/combined.linked.dot
 
@@ -58,7 +56,8 @@ fn dot_with_constraints_and_links_matches_golden() {
     let expected = expected.replace("\r\n", "\n");
 
     assert_eq!(
-        expected, actual,
+        expected,
+        actual,
         "DOT output differs from golden file: {}",
         golden_dot_path().display()
     );

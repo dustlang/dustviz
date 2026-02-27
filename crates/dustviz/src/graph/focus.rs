@@ -1,6 +1,7 @@
-// crates/dustviz/src/graph/focus.rs
-//
-// Build a focused subgraph containing only selected nodes and edges.
+// File: focus.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Build focused subgraph containing only selected nodes and edges.
 
 use std::collections::HashSet;
 

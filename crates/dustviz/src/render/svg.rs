@@ -1,8 +1,8 @@
-// crates/dustviz/src/render/svg.rs
-//
-// SVG renderer via Graphviz `dot -Tsvg`.
-//
-// This is best-effort: if `dot` is unavailable or fails, return a clear diagnostic.
+// File: svg.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   SVG renderer via Graphviz `dot -Tsvg`.
+//   Best-effort: returns diagnostic if dot is unavailable.
 
 use std::io::Write;
 use std::process::{Command, Stdio};
@@ -18,16 +18,18 @@ pub fn render_svg(dot: &str) -> Result<String, Diagnostic> {
         .spawn()
         .map_err(|e| {
             if e.kind() == std::io::ErrorKind::NotFound {
-                Diagnostic::message("Graphviz 'dot' not found in PATH; install Graphviz to enable SVG output.")
+                Diagnostic::message(
+                    "Graphviz 'dot' not found in PATH; install Graphviz to enable SVG output.",
+                )
             } else {
                 Diagnostic::message(format!("failed to spawn Graphviz 'dot': {}", e))
             }
         })?;
 
     if let Some(mut stdin) = child.stdin.take() {
-        stdin
-            .write_all(dot.as_bytes())
-            .map_err(|e| Diagnostic::message(format!("failed to write DOT to 'dot' stdin: {}", e)))?;
+        stdin.write_all(dot.as_bytes()).map_err(|e| {
+            Diagnostic::message(format!("failed to write DOT to 'dot' stdin: {}", e))
+        })?;
     }
 
     let output = child

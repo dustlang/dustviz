@@ -1,11 +1,11 @@
-// crates/dustviz/src/input/discover.rs
-//
-// Input discovery for dustviz.
-//
-// At v0.1, discovery is intentionally minimal and explicit.
-// No implicit searching or convention-based lookup is performed.
-//
-// This module exists to provide a stable place for future expansion
+// File: discover.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Input discovery for dustviz.
+//   v0.1: Minimal and explicit, no implicit searching.
+//   Future expansion point for convention-based lookup.
+
+use std::path::PathBuf;
 // (e.g. multiple inputs, directories, or manifest-based discovery)
 // without contaminating loader logic.
 

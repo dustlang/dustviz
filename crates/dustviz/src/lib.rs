@@ -1,13 +1,9 @@
-// crates/dustviz/src/lib.rs
-//
-// Library entrypoint for dustviz.
-//
-// This allows unit tests and other crates in the workspace to reuse:
-// - input loading
-// - DIR model types
-// - graph building
-//
-// The `dustviz` binary (`src/main.rs`) remains the CLI entrypoint.
+// File: lib.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Library entrypoint for dustviz.
+//   Reusable modules: input loading, DIR model types, graph building.
+//   Binary entrypoint is src/main.rs.
 
 pub mod app;
 pub mod cli;

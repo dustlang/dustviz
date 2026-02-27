@@ -1,4 +1,9 @@
-// crates/dustviz/src/cli.rs
+// File: cli.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   CLI argument definitions for dustviz.
+//   Defines commands: discover, load, render, focus.
+//   Output formats: dot, svg, json.
 
 use std::path::PathBuf;
 

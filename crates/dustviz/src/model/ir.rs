@@ -1,13 +1,11 @@
-// crates/dustviz/src/model/ir.rs
-//
-// v0.1 DIR Program model (JSON) for dustviz.
-//
-// This file defines a minimal, strongly-typed in-memory representation that matches
-// the `program.dir.json` fixture exactly and is intended to deserialize via serde_json.
-//
-// Notes:
-// - This is a visualization model, not a semantic authority.
-// - All strings (types, exprs, predicates) are treated as opaque labels at this layer.
+// File: ir.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   v0.1 DIR Program model (JSON) for dustviz.
+//   Minimal strongly-typed representation matching program.dir.json.
+//   Visualization model, not semantic authority.
+
+use serde::Deserialize;
 
 use serde::Deserialize;
 

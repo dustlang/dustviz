@@ -1,11 +1,10 @@
-// crates/dustviz/src/input/load_constraints.rs
-//
-// Loader for constraint overlay artifacts.
-//
-// This module mirrors `load_dir_program` but targets constraint documents.
-// It performs:
-// - path canonicalization
-// - file loading
+// File: load_constraints.rs - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Loader for constraint overlay artifacts.
+//   Mirrors load_dir_program but targets constraint documents.
+
+use crate::model::constraints::ConstraintsDocument;
 // - JSON deserialization into the typed constraint model
 //
 // No semantic validation or graph merging is done here.
