@@ -5,6 +5,15 @@ All notable changes to dustviz are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-03-09
+
+### Changed
+
+- Migrated `dustviz` from Rust crate layout to Dust-native workspace layout.
+- Replaced `Cargo.toml` + `crates/dustviz` with `State.toml` + `src/*.ds` modules.
+- Ported CLI/input/graph/render/app flow into Dust modules.
+- Updated docs and CI to the Dust-native structure.
+
 ## [0.2.0] - 2026-02-12 (DPL v0.2)
 
 ### Added

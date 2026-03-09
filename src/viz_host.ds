@@ -1,0 +1,50 @@
+// File: viz_host.ds - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Host bridge wrappers used by DustViz.
+
+forge DustVizHost {
+    proc K::args_count() -> UInt32 {
+        return host_args_count();
+    }
+
+    proc K::arg_at(index: UInt32) -> UInt64 {
+        return host_arg_at(index);
+    }
+
+    proc K::str_eq(lhs: UInt64, rhs: UInt64) -> UInt32 {
+        return host_str_eq(lhs, rhs);
+    }
+
+    proc K::str_starts_with(text: UInt64, prefix: UInt64) -> UInt32 {
+        return host_str_starts_with(text, prefix);
+    }
+
+    proc K::print_line(text: UInt64) -> UInt32 {
+        return host_print_line(text);
+    }
+
+    proc K::report_status(status: UInt32) -> UInt32 {
+        if status == DustVizContracts::K::STATUS_OK {
+            return print_line("dustviz: ok");
+        } else {
+            return print_line("dustviz: error");
+        }
+    }
+
+    proc K::write_output(output_path: UInt64, format: UInt32) -> UInt32 {
+        if output_path == 0 {
+            if format == DustVizContracts::K::FORMAT_DOT {
+                return print_line("digraph dustviz { /* deterministic output stub */ }");
+            } else {
+                if format == DustVizContracts::K::FORMAT_JSON {
+                    return print_line("{\"graph\":\"dustviz\",\"mode\":\"deterministic\"}");
+                } else {
+                    return print_line("<svg><!-- deterministic output stub --></svg>");
+                }
+            }
+        } else {
+            return print_line("dustviz: output path selected (host sink)");
+        }
+    }
+}

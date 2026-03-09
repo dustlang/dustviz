@@ -1,0 +1,68 @@
+// File: viz_graph.ds - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Graph construction and overlays for DustViz.
+//   Graph values are deterministic tokens in this Dust-native port.
+
+forge DustVizGraph {
+    proc K::build_dir_graph(program_token: UInt64) -> UInt64 {
+        if program_token == 0 {
+            return 0;
+        } else {
+            return (program_token * 17) + 101;
+        }
+    }
+
+    proc K::overlay_constraints(graph_token: UInt64, constraints_token: UInt64) -> UInt64 {
+        if graph_token == 0 {
+            return 0;
+        } else {
+            if constraints_token == 0 {
+                return 0;
+            } else {
+                return (graph_token * 19) + (constraints_token * 23) + 7;
+            }
+        }
+    }
+
+    proc K::link_constraint_ir_refs(graph_token: UInt64, constraints_token: UInt64, map_token: UInt64) -> UInt32 {
+        if graph_token == 0 {
+            return DustVizContracts::K::ERR_OVERLAY_FAILED;
+        } else {
+            if constraints_token == 0 {
+                return DustVizContracts::K::ERR_OVERLAY_FAILED;
+            } else {
+                if map_token == 0 {
+                    return DustVizContracts::K::ERR_OVERLAY_FAILED;
+                } else {
+                    return DustVizContracts::K::STATUS_OK;
+                }
+            }
+        }
+    }
+
+    proc K::overlay_trace(graph_token: UInt64, trace_token: UInt64) -> UInt64 {
+        if graph_token == 0 {
+            return 0;
+        } else {
+            if trace_token == 0 {
+                return 0;
+            } else {
+                // Focus-node token derived from graph + trace.
+                return (graph_token * 29) + (trace_token * 31) + 13;
+            }
+        }
+    }
+
+    proc K::focus_graph(graph_token: UInt64, focus_nodes_token: UInt64) -> UInt64 {
+        if graph_token == 0 {
+            return 0;
+        } else {
+            if focus_nodes_token == 0 {
+                return 0;
+            } else {
+                return (graph_token * 37) + (focus_nodes_token * 41) + 17;
+            }
+        }
+    }
+}

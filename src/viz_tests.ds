@@ -1,0 +1,69 @@
+// File: viz_tests.ds - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Deterministic self-tests for DustViz orchestration.
+
+forge DustVizTests {
+    const TEST_PASS: UInt32 = 0;
+    const TEST_FAIL: UInt32 = 1;
+
+    proc K::test_parse_success() -> UInt32 {
+        let status = DustVizApp::K::run_parse(101);
+        if status == DustVizContracts::K::STATUS_OK {
+            return TEST_PASS;
+        } else {
+            return TEST_FAIL;
+        }
+    }
+
+    proc K::test_parse_missing_input() -> UInt32 {
+        let status = DustVizApp::K::run_parse(0);
+        if status == DustVizContracts::K::ERR_INPUT_RESOLUTION_FAILED {
+            return TEST_PASS;
+        } else {
+            return TEST_FAIL;
+        }
+    }
+
+    proc K::test_render_focus_requires_trace() -> UInt32 {
+        let status = DustVizApp::K::run_render(101, 0, 0, DustVizContracts::K::FORMAT_DOT, 0, 1, 0);
+        if status == DustVizContracts::K::ERR_FOCUS_REQUIRES_TRACE {
+            return TEST_PASS;
+        } else {
+            return TEST_FAIL;
+        }
+    }
+
+    proc K::test_render_json_success() -> UInt32 {
+        let status = DustVizApp::K::run_render(101, 0, 0, DustVizContracts::K::FORMAT_JSON, 0, 0, 0);
+        if status == DustVizContracts::K::STATUS_OK {
+            return TEST_PASS;
+        } else {
+            return TEST_FAIL;
+        }
+    }
+
+    proc K::run_all_tests() -> UInt32 {
+        let t1 = test_parse_success();
+        if t1 != TEST_PASS {
+            return TEST_FAIL;
+        }
+
+        let t2 = test_parse_missing_input();
+        if t2 != TEST_PASS {
+            return TEST_FAIL;
+        }
+
+        let t3 = test_render_focus_requires_trace();
+        if t3 != TEST_PASS {
+            return TEST_FAIL;
+        }
+
+        let t4 = test_render_json_success();
+        if t4 != TEST_PASS {
+            return TEST_FAIL;
+        }
+
+        return TEST_PASS;
+    }
+}

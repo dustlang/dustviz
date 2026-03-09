@@ -1,0 +1,12 @@
+// File: main.ds - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Dust-native executable entrypoint for DustViz.
+
+forge DustVizMain {
+    proc K::main() -> UInt32 {
+        let status = DustVizCli::K::run_with_host_args();
+        let _ = DustVizHost::K::report_status(status);
+        return status;
+    }
+}

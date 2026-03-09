@@ -1,0 +1,163 @@
+// File: viz_cli.ds - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Host CLI parsing and dispatch for DustViz.
+
+forge DustVizCli {
+    proc K::print_usage() -> UInt32 {
+        let a = DustVizHost::K::print_line("dustviz parse --input <dir.json>");
+        if a != 0 {
+            return a;
+        } else {
+            return DustVizHost::K::print_line("dustviz render --input <dir.json> [--constraints <constraints.json>] [--trace <trace.jsonl>] [--format dot|json|svg] [--annotated] [--focus] [--output <path>]");
+        }
+    }
+
+    proc K::parse_format_token(format_text: UInt64) -> UInt32 {
+        if DustVizHost::K::str_eq(format_text, "dot") == 1 {
+            return DustVizContracts::K::FORMAT_DOT;
+        } else {
+            if DustVizHost::K::str_eq(format_text, "json") == 1 {
+                return DustVizContracts::K::FORMAT_JSON;
+            } else {
+                if DustVizHost::K::str_eq(format_text, "svg") == 1 {
+                    return DustVizContracts::K::FORMAT_SVG;
+                } else {
+                    return DustVizContracts::K::FORMAT_INVALID;
+                }
+            }
+        }
+    }
+
+    proc K::run_parse_command(argc: UInt32) -> UInt32 {
+        mut let input: UInt64 = 0;
+        mut let index: UInt32 = 2;
+
+        while index < argc {
+            let arg = DustVizHost::K::arg_at(index);
+            if DustVizHost::K::str_eq(arg, "--input") == 1 {
+                if index + 1 >= argc {
+                    return DustVizContracts::K::ERR_MISSING_FLAG_VALUE;
+                } else {
+                    input = DustVizHost::K::arg_at(index + 1);
+                    index = index + 2;
+                }
+            } else {
+                return DustVizContracts::K::ERR_INVALID_ARGUMENT;
+            }
+        }
+
+        if input == 0 {
+            return DustVizContracts::K::ERR_MISSING_INPUT;
+        } else {
+            return DustVizApp::K::run_parse(input);
+        }
+    }
+
+    proc K::run_render_command(argc: UInt32) -> UInt32 {
+        mut let input: UInt64 = 0;
+        mut let constraints: UInt64 = 0;
+        mut let trace: UInt64 = 0;
+        mut let output: UInt64 = 0;
+        mut let format: UInt32 = DustVizContracts::K::FORMAT_DOT;
+        mut let annotated: UInt32 = 0;
+        mut let focus: UInt32 = 0;
+        mut let index: UInt32 = 2;
+
+        while index < argc {
+            let arg = DustVizHost::K::arg_at(index);
+
+            if DustVizHost::K::str_eq(arg, "--input") == 1 {
+                if index + 1 >= argc {
+                    return DustVizContracts::K::ERR_MISSING_FLAG_VALUE;
+                } else {
+                    input = DustVizHost::K::arg_at(index + 1);
+                    index = index + 2;
+                }
+            } else {
+                if DustVizHost::K::str_eq(arg, "--constraints") == 1 {
+                    if index + 1 >= argc {
+                        return DustVizContracts::K::ERR_MISSING_FLAG_VALUE;
+                    } else {
+                        constraints = DustVizHost::K::arg_at(index + 1);
+                        index = index + 2;
+                    }
+                } else {
+                    if DustVizHost::K::str_eq(arg, "--trace") == 1 {
+                        if index + 1 >= argc {
+                            return DustVizContracts::K::ERR_MISSING_FLAG_VALUE;
+                        } else {
+                            trace = DustVizHost::K::arg_at(index + 1);
+                            index = index + 2;
+                        }
+                    } else {
+                        if DustVizHost::K::str_eq(arg, "--format") == 1 {
+                            if index + 1 >= argc {
+                                return DustVizContracts::K::ERR_MISSING_FLAG_VALUE;
+                            } else {
+                                format = parse_format_token(DustVizHost::K::arg_at(index + 1));
+                                if format == DustVizContracts::K::FORMAT_INVALID {
+                                    return DustVizContracts::K::ERR_INVALID_FORMAT;
+                                } else {
+                                    index = index + 2;
+                                }
+                            }
+                        } else {
+                            if DustVizHost::K::str_eq(arg, "--annotated") == 1 {
+                                annotated = 1;
+                                index = index + 1;
+                            } else {
+                                if DustVizHost::K::str_eq(arg, "--focus") == 1 {
+                                    focus = 1;
+                                    index = index + 1;
+                                } else {
+                                    if DustVizHost::K::str_eq(arg, "--output") == 1 {
+                                        if index + 1 >= argc {
+                                            return DustVizContracts::K::ERR_MISSING_FLAG_VALUE;
+                                        } else {
+                                            output = DustVizHost::K::arg_at(index + 1);
+                                            index = index + 2;
+                                        }
+                                    } else {
+                                        return DustVizContracts::K::ERR_INVALID_ARGUMENT;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if input == 0 {
+            return DustVizContracts::K::ERR_MISSING_INPUT;
+        } else {
+            return DustVizApp::K::run_render(input, constraints, trace, format, annotated, focus, output);
+        }
+    }
+
+    proc K::run_with_host_args() -> UInt32 {
+        let argc = DustVizHost::K::args_count();
+        if argc < 2 {
+            let _ = print_usage();
+            return DustVizContracts::K::ERR_USAGE;
+        } else {
+            let command = DustVizHost::K::arg_at(1);
+            if DustVizHost::K::str_eq(command, "parse") == 1 {
+                return run_parse_command(argc);
+            } else {
+                if DustVizHost::K::str_eq(command, "render") == 1 {
+                    return run_render_command(argc);
+                } else {
+                    if DustVizHost::K::str_eq(command, "--help") == 1 {
+                        let _ = print_usage();
+                        return DustVizContracts::K::STATUS_OK;
+                    } else {
+                        let _ = print_usage();
+                        return DustVizContracts::K::ERR_USAGE;
+                    }
+                }
+            }
+        }
+    }
+}

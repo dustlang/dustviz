@@ -1,0 +1,112 @@
+// File: viz_app.ds - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Top-level DustViz pipeline orchestration.
+
+forge DustVizApp {
+    proc K::run_parse(input_path: UInt64) -> UInt32 {
+        let resolved = DustVizInput::K::resolve_input_path(input_path);
+        if resolved == 0 {
+            return DustVizContracts::K::ERR_INPUT_RESOLUTION_FAILED;
+        } else {
+            let program = DustVizInput::K::load_dir_program(resolved);
+            if program == 0 {
+                return DustVizContracts::K::ERR_INPUT_LOAD_FAILED;
+            } else {
+                let graph = DustVizGraph::K::build_dir_graph(program);
+                if graph == 0 {
+                    return DustVizContracts::K::ERR_GRAPH_BUILD_FAILED;
+                } else {
+                    return DustVizContracts::K::STATUS_OK;
+                }
+            }
+        }
+    }
+
+    proc K::run_render(input_path: UInt64, constraints_path: UInt64, trace_path: UInt64, format: UInt32, annotated: UInt32, focus: UInt32, output_path: UInt64) -> UInt32 {
+        if DustVizContracts::K::is_supported_format(format) == 0 {
+            return DustVizContracts::K::ERR_INVALID_FORMAT;
+        } else {
+            let resolved_input = DustVizInput::K::resolve_input_path(input_path);
+            if resolved_input == 0 {
+                return DustVizContracts::K::ERR_INPUT_RESOLUTION_FAILED;
+            } else {
+                let program = DustVizInput::K::load_dir_program(resolved_input);
+                if program == 0 {
+                    return DustVizContracts::K::ERR_INPUT_LOAD_FAILED;
+                } else {
+                    mut let graph = DustVizGraph::K::build_dir_graph(program);
+                    if graph == 0 {
+                        return DustVizContracts::K::ERR_GRAPH_BUILD_FAILED;
+                    } else {
+                        if constraints_path != 0 {
+                            let resolved_constraints = DustVizInput::K::resolve_input_path(constraints_path);
+                            if resolved_constraints == 0 {
+                                return DustVizContracts::K::ERR_INPUT_RESOLUTION_FAILED;
+                            } else {
+                                let constraints_doc = DustVizInput::K::load_constraints(resolved_constraints);
+                                if constraints_doc == 0 {
+                                    return DustVizContracts::K::ERR_INPUT_LOAD_FAILED;
+                                } else {
+                                    let map_token = DustVizGraph::K::overlay_constraints(graph, constraints_doc);
+                                    if map_token == 0 {
+                                        return DustVizContracts::K::ERR_OVERLAY_FAILED;
+                                    } else {
+                                        let link_status = DustVizGraph::K::link_constraint_ir_refs(graph, constraints_doc, map_token);
+                                        if link_status != DustVizContracts::K::STATUS_OK {
+                                            return link_status;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        mut let focus_nodes = 0;
+                        if trace_path != 0 {
+                            let resolved_trace = DustVizInput::K::resolve_input_path(trace_path);
+                            if resolved_trace == 0 {
+                                return DustVizContracts::K::ERR_INPUT_RESOLUTION_FAILED;
+                            } else {
+                                let trace_doc = DustVizInput::K::load_trace(resolved_trace);
+                                if trace_doc == 0 {
+                                    return DustVizContracts::K::ERR_INPUT_LOAD_FAILED;
+                                } else {
+                                    focus_nodes = DustVizGraph::K::overlay_trace(graph, trace_doc);
+                                }
+                            }
+                        }
+
+                        if focus == 1 {
+                            if focus_nodes == 0 {
+                                return DustVizContracts::K::ERR_FOCUS_REQUIRES_TRACE;
+                            } else {
+                                graph = DustVizGraph::K::focus_graph(graph, focus_nodes);
+                                if graph == 0 {
+                                    return DustVizContracts::K::ERR_GRAPH_BUILD_FAILED;
+                                }
+                            }
+                        }
+
+                        if format == DustVizContracts::K::FORMAT_DOT {
+                            if annotated == 1 {
+                                return DustVizRender::K::render_dot_annotated(graph, output_path);
+                            } else {
+                                return DustVizRender::K::render_dot(graph, output_path);
+                            }
+                        } else {
+                            if format == DustVizContracts::K::FORMAT_JSON {
+                                return DustVizRender::K::render_json(graph, output_path);
+                            } else {
+                                if format == DustVizContracts::K::FORMAT_SVG {
+                                    return DustVizRender::K::render_svg(graph, output_path);
+                                } else {
+                                    return DustVizContracts::K::ERR_INVALID_FORMAT;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

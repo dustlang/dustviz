@@ -114,7 +114,7 @@ Optional runtime or compiler event stream.
 ### 5.3 SVG
 - Two tiers:
   1. DOT → SVG (invoke `dot -Tsvg`) if available
-  2. Pure Rust renderer later if needed
+  2. Pure Dust renderer later if needed
 
 SVG mode must remain deterministic given same `dot` version OR must embed the DOT and treat SVG as best-effort.
 
@@ -173,7 +173,7 @@ SVG mode must remain deterministic given same `dot` version OR must embed the DO
 
 ### Phase D (v0.4)
 - SVG pipeline (best-effort)
-- Optional web viewer integration (out of Rust binary scope unless requested)
+- Optional web viewer integration (out of Dust runtime scope unless requested)
 
 ---
 

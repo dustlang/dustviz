@@ -1,0 +1,18 @@
+// File: dustviz.ds - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Public DustViz facade over parse/render/testing flows.
+
+forge DustViz {
+    proc K::parse(input_path: UInt64) -> UInt32 {
+        return DustVizApp::K::run_parse(input_path);
+    }
+
+    proc K::render(input_path: UInt64, constraints_path: UInt64, trace_path: UInt64, format: UInt32, annotated: UInt32, focus: UInt32, output_path: UInt64) -> UInt32 {
+        return DustVizApp::K::run_render(input_path, constraints_path, trace_path, format, annotated, focus, output_path);
+    }
+
+    proc K::run_self_tests() -> UInt32 {
+        return DustVizTests::K::run_all_tests();
+    }
+}

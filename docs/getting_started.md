@@ -1,76 +1,17 @@
 # Getting Started
 
-## Prerequisites
+## Build Status
 
-- Rust toolchain (stable)
-- Cargo
-- Optional for SVG output: Graphviz (`dot`) in `PATH`
+DustViz sources are migrated to forge/proc Dust modules in `src/*.ds`.
 
-## Build
+The current `dust` compiler profile in this environment is still centered on top-level `K main` grammar and does not fully compile forge/proc namespace syntax yet.
 
-From the `dustviz` workspace root:
+## Run usage/help shape
 
-```bash
-cargo build --workspace
+Use host runtime/tooling that supports forge-style Dust modules and invoke:
+
+```text
+dustviz --help
 ```
 
-## Run Tests
-
-```bash
-cargo test --workspace --verbose
-```
-
-## CLI Basics
-
-`dustviz` has two subcommands:
-
-1. `parse`: load and parse a DIR program artifact.
-2. `render`: render a graph from DIR input with optional overlays.
-
-## Parse Example
-
-```bash
-cargo run -p dustviz -- parse --input crates/dustviz/tests/fixtures/minimal/program.dir.json
-```
-
-## Render Examples
-
-Render DOT:
-
-```bash
-cargo run -p dustviz -- render \
-  --input crates/dustviz/tests/fixtures/minimal/program.dir.json \
-  --format dot
-```
-
-Render JSON:
-
-```bash
-cargo run -p dustviz -- render \
-  --input crates/dustviz/tests/fixtures/minimal/program.dir.json \
-  --format json
-```
-
-Render SVG (requires Graphviz):
-
-```bash
-cargo run -p dustviz -- render \
-  --input crates/dustviz/tests/fixtures/minimal/program.dir.json \
-  --format svg
-```
-
-Render with constraints and trace focus:
-
-```bash
-cargo run -p dustviz -- render \
-  --input crates/dustviz/tests/fixtures/minimal/program.dir.json \
-  --constraints crates/dustviz/tests/fixtures/constraints/minimal/constraints.json \
-  --trace crates/dustviz/tests/fixtures/trace/minimal/trace.jsonl \
-  --focus \
-  --format dot
-```
-
-## Output Behavior
-
-- If `--output` is provided, output is written to that file.
-- If `--output` is omitted, output is printed to stdout.
+Then execute parse/render commands documented in `cli_reference.md`.

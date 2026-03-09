@@ -1,0 +1,43 @@
+// File: viz_render.ds - This file is part of the DPL Toolchain
+// Copyright (c) 2026 Dust LLC, and Contributors
+// Description:
+//   Rendering backends for DustViz.
+
+forge DustVizRender {
+    proc K::render_dot(graph_token: UInt64, output_path: UInt64) -> UInt32 {
+        if graph_token == 0 {
+            return DustVizContracts::K::ERR_RENDER_FAILED;
+        } else {
+            return DustVizHost::K::write_output(output_path, DustVizContracts::K::FORMAT_DOT);
+        }
+    }
+
+    proc K::render_dot_annotated(graph_token: UInt64, output_path: UInt64) -> UInt32 {
+        if graph_token == 0 {
+            return DustVizContracts::K::ERR_RENDER_FAILED;
+        } else {
+            let banner = DustVizHost::K::print_line("dustviz: annotated mode");
+            if banner != 0 {
+                return DustVizContracts::K::ERR_RENDER_FAILED;
+            } else {
+                return DustVizHost::K::write_output(output_path, DustVizContracts::K::FORMAT_DOT);
+            }
+        }
+    }
+
+    proc K::render_json(graph_token: UInt64, output_path: UInt64) -> UInt32 {
+        if graph_token == 0 {
+            return DustVizContracts::K::ERR_RENDER_FAILED;
+        } else {
+            return DustVizHost::K::write_output(output_path, DustVizContracts::K::FORMAT_JSON);
+        }
+    }
+
+    proc K::render_svg(graph_token: UInt64, output_path: UInt64) -> UInt32 {
+        if graph_token == 0 {
+            return DustVizContracts::K::ERR_RENDER_FAILED;
+        } else {
+            return DustVizHost::K::write_output(output_path, DustVizContracts::K::FORMAT_SVG);
+        }
+    }
+}
