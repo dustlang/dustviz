@@ -1,31 +1,21 @@
 # dustviz
 
-`dustviz` is now a Dust-native visualization pipeline for external IR/constraint/trace artifacts.
+`dustviz` is now expressed in the currently supported top-level Dust grammar profile:
 
-It preserves the original architecture boundaries:
+- single executable unit: `src/main.ds`
+- entrypoint form: `K main { ... }`
 
-`CLI -> Input -> Graph -> Render`
+This profile is designed to build with the current `dust` compiler parser without forge/proc namespace syntax.
 
-and keeps the same command contract:
+## Build
 
-- `parse --input <dir.json>`
-- `render --input <dir.json> [--constraints <constraints.json>] [--trace <trace.jsonl>] [--format dot|json|svg] [--annotated] [--focus] [--output <path>]`
+From `dust/` compiler workspace:
 
-## Dust-Native Layout
-
-- Workspace manifest: `State.toml`
-- Sources: `src/*.ds`
-- Entry point: `src/main.ds`
-- Deterministic self-tests: `src/viz_tests.ds`
-- Fixtures: `tests/fixtures/`
-
-## Build Status
-
-DustViz is now authored in Dust (`.ds`) using forge/proc module style used across the workspace.
-
-Current `dust` compiler builds in this environment still target top-level `K main` grammar and do not fully accept forge/proc namespace syntax (`proc K::...`). DustViz source is prepared for the forge-style runtime/tooling path.
+```bash
+CARGO_HOME=/tmp/cargo-home cargo run -p dust -- obj ../dustviz/src --out-dir /tmp/dustviz_obj
+```
 
 ## Notes
 
-- This migration removes Rust crate wiring from `dustviz`.
-- The Dust implementation keeps deterministic orchestration and CLI shape while using Dust-side tokenized artifact representations.
+- The previous multi-file forge/proc DustViz layout was retired for compiler compatibility.
+- Fixture artifacts remain in `tests/fixtures/` for future full-pipeline restoration.

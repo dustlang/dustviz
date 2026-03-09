@@ -16,8 +16,6 @@ jobs:
         run: |
           test -f State.toml
           test -f src/main.ds
-          test -f src/viz_app.ds
-          test -f src/viz_cli.ds
 
       - name: Verify Rust crate files were retired
         run: |

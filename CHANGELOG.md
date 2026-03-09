@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced `Cargo.toml` + `crates/dustviz` with `State.toml` + `src/*.ds` modules.
 - Ported CLI/input/graph/render/app flow into Dust modules.
 - Updated docs and CI to the Dust-native structure.
+- Collapsed runtime build profile to compiler-compatible single-file top-level grammar (`src/main.ds`, `K main`).
 
 ## [0.2.0] - 2026-02-12 (DPL v0.2)
 

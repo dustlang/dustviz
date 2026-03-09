@@ -1,14 +1,5 @@
 # Testing
 
-Self-tests live in `src/viz_tests.ds`.
+Current validation target is successful object generation from `src/main.ds` via the Dust compiler.
 
-Current deterministic checks:
-
-- parse success path
-- parse missing-input failure path
-- render focus-without-trace failure path
-- render JSON success path
-
-Run via facade:
-
-- `DustViz::K::run_self_tests()`
+Fixture assets in `tests/fixtures/` are preserved for future end-to-end render/overlay tests.

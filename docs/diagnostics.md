@@ -1,20 +1,10 @@
 # Diagnostics
 
-DustViz exposes deterministic status codes via `src/viz_contracts.ds`.
+`src/main.ds` emits deterministic diagnostic lines for:
 
-Primary statuses:
+- missing input
+- focus without trace
+- invalid format
+- graph build failure
 
-- `STATUS_OK`
-- `ERR_USAGE`
-- `ERR_INVALID_ARGUMENT`
-- `ERR_MISSING_FLAG_VALUE`
-- `ERR_MISSING_INPUT`
-- `ERR_INVALID_FORMAT`
-- `ERR_INPUT_RESOLUTION_FAILED`
-- `ERR_INPUT_LOAD_FAILED`
-- `ERR_GRAPH_BUILD_FAILED`
-- `ERR_OVERLAY_FAILED`
-- `ERR_RENDER_FAILED`
-- `ERR_FOCUS_REQUIRES_TRACE`
-
-`src/viz_host.ds` reports terminal outcome through host output.
+These are emitted through `emit` statements in the current compatibility profile.

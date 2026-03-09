@@ -1,17 +1,9 @@
 # Getting Started
 
-## Build Status
+Build DustViz object output from the Dust compiler workspace:
 
-DustViz sources are migrated to forge/proc Dust modules in `src/*.ds`.
-
-The current `dust` compiler profile in this environment is still centered on top-level `K main` grammar and does not fully compile forge/proc namespace syntax yet.
-
-## Run usage/help shape
-
-Use host runtime/tooling that supports forge-style Dust modules and invoke:
-
-```text
-dustviz --help
+```bash
+CARGO_HOME=/tmp/cargo-home cargo run -p dust -- obj ../dustviz/src --out-dir /tmp/dustviz_obj
 ```
 
-Then execute parse/render commands documented in `cli_reference.md`.
+Expected successful output includes an object file for `main.ds`.

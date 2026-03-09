@@ -1,9 +1,5 @@
 # Input Formats
 
-DustViz accepts external artifact paths through CLI flags:
+Fixture artifacts are retained in `tests/fixtures/` for future full loader restoration.
 
-- `--input` (required)
-- `--constraints` (optional)
-- `--trace` (optional)
-
-In the Dust-native implementation, loaders in `src/viz_input.ds` resolve and normalize inputs into deterministic artifact tokens used by later stages.
+Current build profile does not parse external JSON at runtime; it models input presence/absence through deterministic top-level control flow.
